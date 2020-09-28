@@ -7,7 +7,7 @@
 - GPUs are specifically designed for parallel computing. Recent GPUs can execute thousands of threads (a sequence of operations) parallelly, but they have lower single-thread performance than CPUs.
 - Archituture of CPU and GPU is shown below
 
-![cpu vs gpu architecture](GPU_CPU_architecture.PNG)
+![cpu vs gpu architecture](images/GPU_CPU_architecture.PNG)
 
 ## What is CUDA
 
@@ -22,4 +22,4 @@
 - CUDA can schedule each block of threads on any multiprocessor within the GPU in any order, concurrently or sequentially. Once compiled, a CUDA program can run on any number of multiprocessors.
 - Automatic Scalability of CUDA in different GPUs:
 
-![alt text](automatic-scalability.png)
+![alt text](images/automatic-scalability.png)
