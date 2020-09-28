@@ -15,7 +15,7 @@
 - CUDA exposes GPU to general-purpose computing, thus parallelism of GPUs can be exploited. CUDA provides C++ as a higher-level language for programming and managing GPUs.
 - CUDA is designed to support various languages and application programming interfaces.
 
-# CUDA as a scalable programming model
+## CUDA as a scalable programming model
 
 - CUDA transparently scales GPU's parallelism using only three core abstractions, namely, a hierarchy of thread groups, shared memories, and barrier synchronization.Thus makiing the learning curve for the userr easier.
 - These abstractions provide both task parallelization (running different tasks on the same data) and data parallelization (running a single task on different components of data).
