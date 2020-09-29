@@ -89,7 +89,7 @@ int main(void)
     matrixAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, numElements);    
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken by function : "<< duration.count() << " microseconds"<<"\n";
+    cout << "Time taken for addition : "<< duration.count() << " microseconds"<<"\n";
 
     
 
