@@ -1,8 +1,23 @@
+/*
+Compiling with nvcc:
+nvcc mat_mul.cu -o mat_mul -std=c++11
+./mat_mul
+Sample Output:
+[Enter size of square matrix]
+100
+[matrix multiplication of 100 elements]
+Time taken for matrix multiplication without shared memory : 20 microseconds
+Time taken for matrix multiplication with shared memory : 9 microseconds
+*/
+
+// Matrix multiplication with and without shared memory
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <iostream>
+#include <chrono>
+using namespace std::chrono;
 using namespace std;
 
 // Matrices are stored in row-major order:
@@ -10,46 +25,47 @@ using namespace std;
 typedef struct {
     int width;
     int height;
-    int stride; 
+    int stride; // 
     float* elements;
 } Matrix;
 
+// Thread block size
+#define BLOCK_SIZE 16
+
 // Get a matrix element
-__device__ float GetElement(const Matrix A, int row, int col)
+__device__ float GetElement(const Matrix mat, int row, int col)
 {
-    return A.elements[row * A.stride + col];
+    return mat.elements[row * mat.stride + col];
 }
 
-// Set a matrix element
-__device__ void SetElement(Matrix A, int row, int col,
+// Set mat matrix element
+__device__ void SetElement(Matrix mat, int row, int col,
                            float value)
 {
-    A.elements[row * A.stride + col] = value;
+    mat.elements[row * mat.stride + col] = value;
 }
 
 // Get the BLOCK_SIZExBLOCK_SIZE sub-matrix Asub of A that is
 // located col sub-matrices to the right and row sub-matrices down
 // from the upper-left corner of A
- __device__ Matrix GetSubMatrix(Matrix A, int row, int col) 
+ __device__ Matrix GetSubMatrix(Matrix mat, int row, int col) 
 {
-    Matrix Asub;
-    Asub.width    = BLOCK_SIZE;
-    Asub.height   = BLOCK_SIZE;
-    Asub.stride   = A.stride;
-    Asub.elements = &A.elements[A.stride * BLOCK_SIZE * row
+    Matrix matsub;
+    matsub.width    = BLOCK_SIZE;
+    matsub.height   = BLOCK_SIZE;
+    matsub.stride   = mat.stride;
+    matsub.elements = &mat.elements[mat.stride * BLOCK_SIZE * row
                                          + BLOCK_SIZE * col];
-    return Asub;
+    return matsub;
 }
 
-// Thread block size
-#define BLOCK_SIZE 16
+
 
 // Forward declaration of the matrix multiplication kernel
 __global__ void MatMulKernelSharedMemory(const Matrix, const Matrix, Matrix);
 __global__ void MatMulKernel(const Matrix, const Matrix, Matrix);
 
 // Matrix multiplication - Host code
-// Matrix dimensions are assumed to be multiples of BLOCK_SIZE
 void MatMul(const Matrix A, const Matrix B, Matrix C)
 {
     // Load A and B to device memory
@@ -79,14 +95,12 @@ void MatMul(const Matrix A, const Matrix B, Matrix C)
     MatMulKernel<<<dimGrid, dimBlock>>>(d_A, d_B, d_C);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken for multiplication without shared memory : "<< duration.count() << " microseconds"<<"\n";
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
-    dim3 dimGrid(B.width / dimBlock.x, A.height / dimBlock.y);
-    auto start = high_resolution_clock::now();// Calculate Execution Time
+    cout << "Time taken for matrix multiplication without shared memory : "<< duration.count() << " microseconds"<<"\n";
+    auto start1 = high_resolution_clock::now();// Calculate Execution Time
     MatMulKernelSharedMemory<<<dimGrid, dimBlock>>>(d_A, d_B, d_C);
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken for multiplication with shared memory : "<< duration.count() << " microseconds"<<"\n";
+    auto stop1 = high_resolution_clock::now();
+    auto duration1 = duration_cast<microseconds>(stop1 - start1);
+    cout << "Time taken for matrix multiplication with shared memory : "<< duration1.count() << " microseconds"<<"\n";
 
 
     // Read C from device memory
@@ -181,6 +195,7 @@ int main(void)
 
     // Print the matrix length to be used, and compute its size
     int matSize;
+    printf("[Enter size of square matrix]\n");
     scanf("%d",&matSize);
     Matrix h_A,h_B,h_C;
     h_A.width = h_B.width = h_C.width = matSize;
@@ -198,7 +213,7 @@ int main(void)
     h_C.elements = (float *)malloc(size);
 
     // Verify that allocations succeeded
-    if (h_A == NULL || h_B == NULL || h_C == NULL)
+    if (h_A.elements == NULL || h_B.elements == NULL || h_C.elements == NULL)
     {
         fprintf(stderr, "Failed to allocate host matrix!\n");
         exit(EXIT_FAILURE);

@@ -64,3 +64,75 @@ asyncEngineCount property is used to check whether a device supports this functi
 - `cudaStreamSynchronize()`takes a stream as a parameter and waits until all preceding commands in the given stream have completed.
 ### Host Functions (Callbacks)
 - The runtime provides a way to insert a CPU function call at any point into a stream via cudaLaunchHostFunc()
+## Graphs
+- Graphs are a sequence of operation, just like streams, that are connected by dependencies. A graph is created before the execution of the program. 
+- Execution using graph has been divided into three stages:
+    - Definition Phase: A program creates a graph along with its dependencies.
+    - Instantiation Phase:  Takes a snapshot of the graph template, validates it, and performs much of the setup.
+    - Execution: A graph is launched onto a CUDA stream.
+- Operations are nodes in the graph and sequence of operations its dependencies.  
+- Graphs can be created via two mechanisms: explicit API and stream capture
+- Stream capture helps to create a graph from existing stream-based APIs. `cudaStreamBeginCapture()` and `cudaStreamEndCapture()` is used to convert streams into graphs. 
+```
+cudaGraph_t graph;
+ cudaStreamBeginCapture(stream);
+ kernel_A<<< ..., stream >>>(...); 
+kernel_B<<< ..., stream >>>(...); 
+libraryCall(stream); 
+kernel_C<<< ..., stream >>>(...); 
+cudaStreamEndCapture(stream, &graph);
+``` 
+- Stream capture can handle cross-stream dependencies expressed with `cudaEventRecord()` and `cudaStreamWaitEvent()`, provided the event being waited upon was recorded into the same capture graph.
+- CUDA provides a lightweight mechanism known as "Graph Update," which allows specific node parameters to be modified in-place without having to rebuild the entire graph.
+- `cudaGraphExecUpdate()` allows an instantiated graph to be updated with the parameters from an identical graph. (See example update_graph.cu)
+
+## Events 
+- The CUDA runtime provides a way to monitor the device's progress by letting the application asynchronously record events at any point in the program, and query when these events are completed.
+``` 
+cudaEvent_t start, stop; 
+cudaEventCreate(&start); 
+cudaEventCreate(&stop); 
+```
+## Multi-Device System 
+- CUDA support multiple devices for a host. A certain device can be selected for a certain stream.
+- A host thread can set the device it operates on at any time by calling `cudaSetDevice()`. 
+## Peer-to-Peer Memory Access
+- In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
+- This peer-to-peer memory access feature is supported between two devices if `cudaDeviceCanAccessPeer()` returns true for these two devices. 
+- Memory copies can be performed between the memories of two different devices in a multi-device set up. 
+- This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPeer()`, or `cudaMemcpy3DPeerAsync()`.
+## Unified Virtual Address Space
+- A single unified address space is used for both device and host. Memory allocation in host takes place through CUDA API calls.
+- `cudaPointerGetAttributes()` is used to determine the location of the memory on the host and devices allocated through CUDA. 
+## Error Checking 
+- The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
+## Texture and Surface Memory 
+- CUDA supports a subset of the texturing hardware that the GPU uses for graphics to access texture and surface memory.
+- There are two different APIs to access texture and surface memory: 
+    - The texture reference API 
+    - The texture object API
+- The process of reading a texture calling one of these functions is called a texture fetch.
+- Texture Reference and Objects have the following attributes (see example texture.cu):
+    - Texture: texture memory that is fetched.
+    - Dimension: the dimension of texture.
+    - Type: type of texel ( texture elements)
+    - Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
+    - Addressing mode
+    - Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
+### Layered Textures
+- A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
+### Cubemap Textures
+- A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
+- A layered texture can only be a CUDA array by calling `cudaMalloc3DArray()` with the `cudaArrayCubemap` flag. 
+- A cubemap layered texture is a layered texture whose layers are cubemaps of the same dimension.
+## Surface Memory
+- CUDA arrays can be written/read from surface memory. 
+- Similar to texture, there are two ways to access surface memory: surface object or surface reference.
+- `cudaCreateSurfaceObject()`  is used to create a surface object.
+- A surface reference is declared at file scope as a variable of type surface:
+```
+surface<void, Type> surfRef;
+```
+### Cubemap surface
+Similar to cubemap texture, cubemap surface is two-layered surface memory
+

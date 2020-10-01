@@ -8,10 +8,10 @@ using namespace std;
 // depth 3D array of floating-point values and shows how 
 // to loop over the array elements in device code
 // Device code
-__global__ void matrix_allocate(cudaPitchedPtr devPitchedPtr,
+__global__ void matrixLoop(cudaPitchedPtr devPitchedPtr,
                          int width, int height, int depth)
 {
-    char* deice_pointer = devPitchedPtr.ptr;
+    char* deice_pointer = (char* )devPitchedPtr.ptr;
     size_t pitch = devPitchedPtr.pitch;
     size_t slicePitch = pitch * height;
     for (int z = 0; z < depth; ++z) {
@@ -28,9 +28,13 @@ __global__ void matrix_allocate(cudaPitchedPtr devPitchedPtr,
 int main()
 {
     int width = 128, height = 128, depth = 128;
+    //cuda data structure used to dimension o the matrix
     cudaExtent extent = make_cudaExtent(width * sizeof(float),
                                         height, depth);
+    // declare cuda pitched memory pointer                                    
     cudaPitchedPtr devPitchedPtr;
+    // allocate 3d matrix
     cudaMalloc3D(&devPitchedPtr, extent);
-    matrix_allocate<<<100, 512>>>(devPitchedPtr, width, height, depth);
+    printf("Matrix Allocated\n");
+    matrixLoop<<<100, 512>>>(devPitchedPtr, width, height, depth);
 }
