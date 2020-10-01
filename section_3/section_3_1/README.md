@@ -1,5 +1,5 @@
-
 # NVCC Compilation
+
 - Kernels can be either written using a higher-level language like C++ or using CUDA instruction set architecture, called PTX.
 - In both cases, `nvcc` is used to convert Kernels into binary code.
 ## Offline Compilation
