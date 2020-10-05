@@ -1,3 +1,18 @@
+/* 
+Compiling with nvcc:
+nvcc vector_add.cu -o vector_add -std=c++11
+./vector_add
+Sample Output :
+[Enter size of vector]
+1000
+[Vector addition of 1000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 2 blocks of 512 threads
+Time taken by function : 21 microseconds
+Copy output data from the CUDA device to the host memory
+Done
+*/
+
 // Vector addition on GPU and CPU, using CUDA C++
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +38,7 @@ int main(void)
 
     // Print the vector length to be used, and compute its size
     int numElements;
+    printf("[Enter size of vector]\n";)
     scanf("%d",&numElements);
     
     size_t size = numElements * sizeof(float);
@@ -67,7 +83,7 @@ int main(void)
     // device memory
     printf("Copy input data from the host memory to the CUDA device\n");
     cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
-    udaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
 
     // Launch the Vector Add CUDA Kernel
     int threadsPerBlock = 512;

@@ -1,3 +1,18 @@
+/* 
+Compiling with g++:
+g++ vector_add.cpp -o vector_add 
+./vector_add
+Sample Output :
+[Enter size of vector]
+1000
+[Vector addition of 1000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 2 blocks of 512 threads
+Time taken by function : 40 microseconds
+Copy output data from the CUDA device to the host memory
+Done
+*/
+
 // Vector addition using only CPU
 #include <stdio.h>
 #include <stdlib.h>
