@@ -17,6 +17,6 @@
 ## Maximize Memory Throughput 
 - Minimizing data transfers with low bandwidth can help in maximizing the memory throughput of an application.
 ## Maximize Instruction Throughput 
-- To maximize instruction throughput, the application should: ‣ Minimize the use of arithmetic instructions with low throughput; this includes trading precision for speed when it does not affect the result, such as using single-precision instead of double-precision.
+- Minimize the use of arithmetic instructions with low throughput; this includes trading precision for speed when it does not affect the result, such as using single-precision instead of double-precision.
 - Minimize divergent warps caused by control flow instructions 
 - Reduce the number of instructions
