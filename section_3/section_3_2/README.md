@@ -135,4 +135,14 @@ surface<void, Type> surfRef;
 ```
 ### Cubemap surface
 Similar to cubemap texture, cubemap surface is two-layered surface memory
-
+## Versioning and Compatibility
+- There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
+- Version of CUDA API can be accessed via `CUDA_VERSION`.
+- The Driver API Is Backward but Not Forward Compatible :
+## Compute Modes 
+- Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
+    - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
+    - Exclusive-process compute mode: Only one CUDA context may be created on the device across all processes in the system. 
+    - Prohibited compute mode: No CUDA context can be created on the device.
+## Mode Switches:
+- GPUs having display output have some dedicates display VRAM known as primary surface that is used to refresh the display. There is an increase in primary surface usage when users initiate a mode switch of the display by changing the resolution.  
