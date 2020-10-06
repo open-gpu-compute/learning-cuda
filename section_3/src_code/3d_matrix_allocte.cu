@@ -1,3 +1,12 @@
+/*
+Compiling with nvcc:
+nvcc 3d_matrix_allocte.cu -o 3d_matrix_allocte -std=c++11
+./3d_matrix_allocte
+Sample Output:
+Matrix Allocated
+Time taken for matrix allocation : 9 microseconds
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>

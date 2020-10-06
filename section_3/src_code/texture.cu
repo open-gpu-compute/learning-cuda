@@ -1,3 +1,8 @@
+/*
+Compiling with nvcc:
+nvcc texture.cu -o texture -std=c++11
+./texture
+*/
 // Iniating a cuda texture object
 #include <stdio.h>
 #include <stdlib.h>
