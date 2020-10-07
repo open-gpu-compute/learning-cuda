@@ -96,6 +96,15 @@ asyncEngineCount property is used to check whether a device supports this functi
 ## Streams
 - Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels.
 - If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.
+### Creation and Destruction of Stream
+```
+cudaStream_t stream[2];
+for (int i = 0; i < 2; ++i)
+    cudaStreamCreate(&stream[i]);
+for (int i = 0; i < 2; ++i)
+    cudaStreamDestroy(stream[i]);
+```
+
 ### Explicit Synchronization
 - `cudaDeviceSynchronize()` waits until all preceding commands in all streams of all host threads have completed.
 - `cudaStreamSynchronize()`takes a stream as a parameter and waits until all preceding commands in the given stream have completed.
@@ -133,9 +142,35 @@ cudaEventCreate(&stop);
 ## Multi-Device System 
 - CUDA support multiple devices for a host. A certain device can be selected for a certain stream.
 - A host thread can set the device it operates on at any time by calling `cudaSetDevice()`. 
+```
+int deviceCount;
+cudaGetDeviceCount(&deviceCount);
+int device;
+for (device = 0; device < deviceCount; ++device) {
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, device);
+    printf("Device %d has compute capability %d.%d.\n",
+           device, deviceProp.major, deviceProp.minor);
+}
+```
+
 ## Peer-to-Peer Memory Access
 - In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
 - This peer-to-peer memory access feature is supported between two devices if `cudaDeviceCanAccessPeer()` returns true for these two devices. 
+```
+cudaSetDevice(0);                   // Set device 0 as current
+float* p0;
+size_t size = 1024 * sizeof(float);
+cudaMalloc(&p0, size);              // Allocate memory on device 0
+MyKernel<<<1000, 128>>>(p0);        // Launch kernel on device 0
+cudaSetDevice(1);                   // Set device 1 as current
+cudaDeviceEnablePeerAccess(0, 0);   // Enable peer-to-peer access
+                                    // with device 0
+
+// Launch kernel on device 1
+// This kernel launch can access memory on device 0 at address p0
+MyKernel<<<1000, 128>>>(p0);
+```
 - Memory copies can be performed between the memories of two different devices in a multi-device set up. 
 - This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPeer()`, or `cudaMemcpy3DPeerAsync()`.
 ## Unified Virtual Address Space
