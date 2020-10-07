@@ -211,6 +211,8 @@ Similar to cubemap texture, cubemap surface is two-layered surface memory
 - There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
 - Version of CUDA API can be accessed via `CUDA_VERSION`.
 - The Driver API Is Backward but Not Forward Compatible :
+
+![cpu vs gpu architecture](.\images\versioning.PNG)
 ## Compute Modes 
 - Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
     - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
