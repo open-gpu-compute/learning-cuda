@@ -36,6 +36,7 @@ int main(void)
 
     // Print the vector length to be used, and compute its size
     int numElements;
+    printf("Enter number of elements in your vector: \n");
     scanf("%d",&numElements);
     
     size_t size = numElements * sizeof(float);
@@ -67,7 +68,7 @@ int main(void)
     vectorAdd(A,B,C,numElements);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken by function : "<< duration.count() << " microseconds"<<"\n";
+    cout << "Time taken by function: "<< duration.count() << " microseconds"<<"\n";
     
     // Free CPU memory
     free(A);
