@@ -1,3 +1,18 @@
+/*
+Compiling with nvcc:
+nvcc mat_add.cu -o mat_add -std=c++11
+./mat_add
+Sample Output:
+[Enter size of matrix]
+100
+[matrix addition of 100 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with dimension (7, 7) blocks of dimension (16, 16) threads
+Time taken for addition : 21 microseconds
+Copy output data from the CUDA device to the host memory
+Done
+*/
+
 // Matrix addition using CUDA C++
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +38,7 @@ int main(void)
 
     // Print the matrix length to be used, and compute its size
     int numElements;
+    printf("[Enter size of matrix]\n");
     scanf("%d",&numElements);
     
     size_t size = numElements * numElements * sizeof(float);
