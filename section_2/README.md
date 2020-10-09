@@ -99,7 +99,7 @@ __global__ void vectorAdd(const float *A, const float *B, float *C, int numEleme
 
 `__global__` decorator indicates that this is a kernel.
 
-- [ ] Explain `int i` semantics.
+Here threads are enumerated using `i` and are executed concurrently. 
 
 Complete code is in `src/vector_add.cu`. Read it for memory allocation and device copy semantics. Compile and run it as
 
