@@ -15,10 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 
-from recommonmark.parser import CommonMarkParser
-source_parsers = {
-   '.md': CommonMarkParser
-}
+
 # -- Project information -----------------------------------------------------
 
 project = 'Tutorials'
