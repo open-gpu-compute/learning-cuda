@@ -12,6 +12,8 @@ OPENGC's Tutorials
 
    introduction_to_cuda/README.md
    programming_model/README.md
+   programming_interface/README.md
+   hardware_and_performance_guidlines/README.md
 
 Indices and tables
 ==================
