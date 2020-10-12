@@ -169,12 +169,10 @@ Write-combining memory frees up the host's L1 and L2 cache resources, making mor
 A block of page-locked host memory can also be mapped into the address space of the device by passing flag `cudaHostAllocMapped` to `cudaHostAlloc()` or by passing flag cudaHostRegisterMapped to cudaHostRegister(). 
 Such a block has therefore in general two addresses: one in host memory that is returned by `cudaHostAlloc()` or `malloc()`, and one in device memory that can be retrieved using `cudaHostGetDevicePointer()` and then used to access the block from within a kernel.
 ## Asynchronous Concurrent Execution
-### Concurrent Execution between Host and Device
-Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
+**Concurrent Execution between Host and Device**: Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
 Many device operations(streams) can be queued up using asynchronous calls if appropriate resources are available.
 This relieves the host thread of much of the responsibility to manage the device, leaving it free for other tasks.
-### Concurrent Kernel Execution
-Machines with high compute capabilities (>2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
+**Concurrent Kernel Execution**: Machines with high compute capabilities (>2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
 ### Overlap of Data Transfer and Kernel Execution
 Some devices can perform asynchronous memory transfer to and from GPU with kernels running concurrently.
 asyncEngineCount property is used to check whether a device supports this functionality or not.
@@ -274,8 +272,7 @@ This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPee
 ## Unified Virtual Address Space
 A single unified address space is used for both device and host. Memory allocation in host takes place through CUDA API calls.
 `cudaPointerGetAttributes()` is used to determine the location of the memory on the host and devices allocated through CUDA. 
-## Error Checking 
-The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
+**Error Checking**: The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
 ## Texture and Surface Memory 
 CUDA supports a subset of the texturing hardware that the GPU uses for graphics to access texture and surface memory.
 There are two different APIs to access texture and surface memory: 
@@ -292,8 +289,7 @@ Texture Reference and Objects have the following attributes (see example texture
 For code sample on how to initiate texture see `src/txture.cu` 
 ### Layered Textures
 A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
-### Cubemap Textures
-A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
+**Cubemap Textures**: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
 A layered texture can only be a CUDA array by calling `cudaMalloc3DArray()` with the `cudaArrayCubemap` flag. 
 A cubemap layered texture is a layered texture whose layers are cubemaps of the same dimension.
 ## Surface Memory
@@ -304,8 +300,7 @@ A surface reference is declared at file scope as a variable of type surface:
 ```
 surface<void, Type> surfRef;
 ```
-### Cubemap surface
-Similar to cubemap texture, cubemap surface is two-layered surface memory
+**Cubemap surface** : Similar to cubemap texture, cubemap surface is two-layered surface memory
 ## Versioning and Compatibility
 There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
 Version of CUDA API can be accessed via `CUDA_VERSION`.
