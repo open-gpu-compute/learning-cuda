@@ -51,9 +51,9 @@ nvcc <filename.cu> -o <filename>
 
 Run the executable file using `./<filename>`
 
-# Quick Hands On
+## Quick Hands On
 
-## CPU
+### CPU
 
 Let's write a simple program to add two vectors. In standard CPU based code, you would write this as
 
@@ -81,7 +81,7 @@ Time taken by function: 9898 microseconds
 Done
 ```
 
-## GPU
+### GPU
 
 On CUDA, you would write this as a kernel:
 

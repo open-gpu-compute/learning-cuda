@@ -72,11 +72,10 @@
 </div>
 <p>Run the executable file using <code class="docutils literal notranslate"><span class="pre">./&lt;filename&gt;</span></code></p>
 </div>
-</div>
 <div class="section" id="quick-hands-on">
-<h1>Quick Hands On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h1>
+<h2>Quick Hands On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="cpu">
-<h2>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h2>
+<h3>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h3>
 <p>Let’s write a simple program to add two vectors. In standard CPU based code, you would write this as</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
 <span class="p">{</span>
@@ -101,7 +100,7 @@ Done
 </div>
 </div>
 <div class="section" id="gpu">
-<h2>GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">¶</a></h2>
+<h3>GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">¶</a></h3>
 <p>On CUDA, you would write this as a kernel:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="kt">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
 <span class="p">{</span>
@@ -132,6 +131,7 @@ Done
 <p>See how massive parallelization helped speed up the computation by a factor of 150.</p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -159,11 +159,7 @@ Done
 <li class="toctree-l2"><a class="reference internal" href="#memory-heirearchy">Memory Heirearchy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#heterogeneous-programming">Heterogeneous Programming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compiling-cuda-c-code">Compiling CUDA C++ code:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#quick-hands-on">Quick Hands On</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#cpu">CPU</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gpu">GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-hands-on">Quick Hands On</a></li>
 </ul>
 </li>
 </ul>

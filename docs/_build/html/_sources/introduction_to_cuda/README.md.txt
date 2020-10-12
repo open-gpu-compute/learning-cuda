@@ -26,4 +26,4 @@ CUDA can schedule each block of threads on any multiprocessor within the GPU in 
 
 Automatic Scalability of CUDA in different GPUs:
 
-![alt text](images/automatic-scalability.png)
+![Automatic Scalability](images/automatic-scalability.png)
