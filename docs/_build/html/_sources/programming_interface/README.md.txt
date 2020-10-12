@@ -314,8 +314,8 @@ The Driver API Is Backward but Not Forward Compatible :
 ![cpu vs gpu architecture](images/versioning.PNG)
 ## Compute Modes 
 Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
-    * Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
-    * Exclusive-process compute mode: Only one CUDA context may be created on the device across all processes in the system. 
-    * Prohibited compute mode: No CUDA context can be created on the device.
+    - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
+    -  Exclusive-process compute mode: Only one CUDA context may be created on the device across all processes in the system. 
+    -  Prohibited compute mode: No CUDA context can be created on the device.
 ## Mode Switches:
 GPUs having display output have some dedicates display VRAM known as primary surface that is used to refresh the display. There is an increase in primary surface usage when users initiate a mode switch of the display by changing the resolution.  
