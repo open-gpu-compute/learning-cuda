@@ -160,7 +160,7 @@ Time taken for matrix multiplication with shared memory : 9 microseconds
 As we can see, using shared memory reduces the computation time by approxmatively half.
 In this shared memory implementation, each thread block is responsible for computing one square sub-matrix Csub of C and each thread within the block is responsible for computing one element of Csub. 
 ## Page-Locked memory
-CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by malloc())  
+CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by `malloc()`)  
 Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
 ### Write-Combining Memory
 By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag `cudaHostAllocWriteCombined` to `cudaHostAlloc()`.
@@ -183,10 +183,19 @@ Some devices also support concurrent and overlapping data transfers.
 Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels.
 If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.
 ### Creation and Destruction of Stream
+The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device  and one memory copy from device to host:
 ```
 cudaStream_t stream[2];
 for (int i = 0; i < 2; ++i)
     cudaStreamCreate(&stream[i]);
+float* hostPtr;
+cudaMallocHost(&hostPtr, 2 * size);
+for (int i = 0; i < 2; ++i) {
+    cudaMemcpyAsync(inputDevPtr + i * size, hostPtr + i * size,
+                    size, cudaMemcpyHostToDevice, stream[i]);
+    cudaMemcpyAsync(hostPtr + i * size, outputDevPtr + i * size,
+                    size, cudaMemcpyDeviceToHost, stream[i]);
+}
 for (int i = 0; i < 2; ++i)
     cudaStreamDestroy(stream[i]);
 ```
@@ -199,16 +208,16 @@ The runtime provides a way to insert a CPU function call at any point into a str
 ## Graphs
 Graphs are a sequence of operation, just like streams, that are connected by dependencies. A graph is created before the execution of the program. 
 Execution using graph has been divided into three stages:
-    - Definition Phase: A program creates a graph along with its dependencies.
-    - Instantiation Phase:  Takes a snapshot of the graph template, validates it, and performs much of the setup.
-    - Execution: A graph is launched onto a CUDA stream.
+    * Definition Phase: A program creates a graph along with its dependencies.
+    * Instantiation Phase:  Takes a snapshot of the graph template, validates it, and performs much of the setup.
+    * Execution: A graph is launched onto a CUDA stream.
 Operations are nodes in the graph and sequence of operations its dependencies.  
 Graphs can be created via two mechanisms: explicit API and stream capture
 Stream capture helps to create a graph from existing stream-based APIs. `cudaStreamBeginCapture()` and `cudaStreamEndCapture()` is used to convert streams into graphs. 
 ```
 cudaGraph_t graph;
- cudaStreamBeginCapture(stream);
- kernel_A<<< ..., stream >>>(...); 
+cudaStreamBeginCapture(stream);
+kernel_A<<< ..., stream >>>(...); 
 kernel_B<<< ..., stream >>>(...); 
 libraryCall(stream); 
 kernel_C<<< ..., stream >>>(...); 
