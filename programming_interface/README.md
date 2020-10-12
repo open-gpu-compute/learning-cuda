@@ -56,9 +56,9 @@ A portion of the L2 cache can be set aside to be used for persisting data access
 Persisting accesses have prioritized use of this set-aside portion of L2 cache, whereas normal or streaming, accesses to global memory can only utilize this portion of L2 when it is unused by persisting accesses.
 ### L2 Access Properties
 Three types of access properties are defined for different global memory data accesses:
-    `cudaAccessPropertyStreaming`: Memory accesses that occur with the streaming property are less likely to persist in the L2 cache because these accesses are preferentially evicted.
-    `cudaAccessPropertyPersisting`: Memory accesses that arise with the persisting property are more likely to stay in the L2 cache because these accesses are preferentially retained in the set-aside portion of L2 cache.
-    `cudaAccessPropertyNormal`: This access property forcibly resets previously applied persisting access property to a normal status.
+    * `cudaAccessPropertyStreaming`: Memory accesses that occur with the streaming property are less likely to persist in the L2 cache because these accesses are preferentially evicted.
+    * `cudaAccessPropertyPersisting`: Memory accesses that arise with the persisting property are more likely to stay in the L2 cache because these accesses are preferentially retained in the set-aside portion of L2 cache.
+    * `cudaAccessPropertyNormal`: This access property forcibly resets previously applied persisting access property to a normal status.
 ### Reset L2 Access to Normal
 A persisting L2cache may be persisting long after a CUDA kernel is executed. 
 It's a good practice to clear L2 persisting cache and its access properties.
@@ -70,9 +70,95 @@ The net utilization of L2 set-aside cache is the sum of  L2 set aside used in al
 ### Query properties of L2 cache
 Properties related to L2 cache are a part of `cudaDeviceProp` struct and can be queried using CUDA runtime API `cudaGetDeviceProperties`
 ## Shared Memory
-Shared memory (See Section 1) is allocated using `__shared__` memory space specifier.
+Shared memory  is allocated using `__shared__` memory space specifier.
 Its is faster than global memory and reduce global memory access calls.
-( See example mat-mul.cu)
+### Quick Hands on
+
+Lets write a code for matrix multiplication without using shared memory on CUDA :
+```
+__global__ void MatMulKernel(Matrix A, Matrix B, Matrix C)
+{
+    // Each thread computes one element of C
+    // by accumulating results into Cvalue
+    float Cvalue = 0;
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    for (int e = 0; e < A.width; ++e)
+        Cvalue += A.elements[row * A.width + e]
+                * B.elements[e * B.width + col];
+    C.elements[row * C.width + col] = Cvalue;
+}
+```
+Sub routine for matrix multiplication using shared memory will be written as:
+```
+__global__ void  MatMulKernelSharedMemory(Matrix A, Matrix B, Matrix C)
+{
+    // Block row and column
+    int blockRow = blockIdx.y;
+    int blockCol = blockIdx.x;
+
+    // Each thread block computes one sub-matrix Csub of C
+    Matrix Csub = GetSubMatrix(C, blockRow, blockCol);
+
+    // Each thread computes one element of Csub
+    // by accumulating results into Cvalue
+    float Cvalue = 0;
+
+    // Thread row and column within Csub
+    int row = threadIdx.y;
+    int col = threadIdx.x;
+
+    // Loop over all the sub-matrices of A and B that are
+    // required to compute Csub
+    // Multiply each pair of sub-matrices together
+    // and accumulate the results
+    for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
+
+        // Get sub-matrix Asub of A
+        Matrix Asub = GetSubMatrix(A, blockRow, m);
+
+        // Get sub-matrix Bsub of B
+        Matrix Bsub = GetSubMatrix(B, m, blockCol);
+
+        // Shared memory used to store Asub and Bsub respectively
+        __shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
+        __shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
+
+        // Load Asub and Bsub from device memory to shared memory
+        // Each thread loads one element of each sub-matrix
+        As[row][col] = GetElement(Asub, row, col);
+        Bs[row][col] = GetElement(Bsub, row, col);
+
+        // Synchronize to make sure the sub-matrices are loaded
+        // before starting the computation
+        __syncthreads();
+        // Multiply Asub and Bsub together
+        for (int e = 0; e < BLOCK_SIZE; ++e)
+            Cvalue += As[row][e] * Bs[e][col];
+
+        // Synchronize to make sure that the preceding
+        // computation is done before loading two new
+        // sub-matrices of A and B in the next iteration
+        __syncthreads();
+    }
+
+    // Write Csub to device memory
+    // Each thread writes one element
+    SetElement(Csub, row, col, Cvalue);
+}
+```
+Full code can be found at `src/mat_mul.cu` . Compile the code using 
+```
+nvcc mat_mul.cu -o mat_mul -std=c++11
+./mat_mul
+[Enter size of square matrix]
+100
+[matrix multiplication of 100 elements]
+Time taken for matrix multiplication without shared memory : 20 microseconds
+Time taken for matrix multiplication with shared memory : 9 microseconds
+```
+As we can see, using shared memory reduces the computation time by approxmatively half.
+In this shared memory implementation, each thread block is responsible for computing one square sub-matrix Csub of C and each thread within the block is responsible for computing one element of Csub. 
 ## Page-Locked memory
 CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by malloc())  
 Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
@@ -153,10 +239,12 @@ for (device = 0; device < deviceCount; ++device) {
            device, deviceProp.major, deviceProp.minor);
 }
 ```
+This code lets you print properties of device on the system.
 
 ## Peer-to-Peer Memory Access
 In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
 This peer-to-peer memory access feature is supported between two devices if `cudaDeviceCanAccessPeer()` returns true for these two devices. 
+A unified address space is used for both devices, so the same pointer can be used to address memory from both devices as shown in the code sample below
 ```
 cudaSetDevice(0);                   // Set device 0 as current
 float* p0;
@@ -171,6 +259,7 @@ cudaDeviceEnablePeerAccess(0, 0);   // Enable peer-to-peer access
 // This kernel launch can access memory on device 0 at address p0
 MyKernel<<<1000, 128>>>(p0);
 ```
+
 Memory copies can be performed between the memories of two different devices in a multi-device set up. 
 This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPeer()`, or `cudaMemcpy3DPeerAsync()`.
 ## Unified Virtual Address Space
@@ -181,16 +270,17 @@ The runtime maintains an error variable, called `cudaPeekAtLastError()`, for eac
 ## Texture and Surface Memory 
 CUDA supports a subset of the texturing hardware that the GPU uses for graphics to access texture and surface memory.
 There are two different APIs to access texture and surface memory: 
-    - The texture reference API 
-    - The texture object API
+    * The texture reference API 
+    * The texture object API
 The process of reading a texture calling one of these functions is called a texture fetch.
 Texture Reference and Objects have the following attributes (see example texture.cu):
-    - Texture: texture memory that is fetched.
-    - Dimension: the dimension of texture.
-    - Type: type of texel ( texture elements)
-    - Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
-    - Addressing mode
-    - Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
+    * Texture: texture memory that is fetched.
+    * Dimension: the dimension of texture.
+    * Type: type of texel ( texture elements)
+    * Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
+    * Addressing mode
+    * Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
+For code sample on how to initiate texture see `src/txture.cu` 
 ### Layered Textures
 A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
 ### Cubemap Textures
@@ -215,8 +305,8 @@ The Driver API Is Backward but Not Forward Compatible :
 ![cpu vs gpu architecture](.\images\versioning.PNG)
 ## Compute Modes 
 Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
-    - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
-    - Exclusive-process compute mode: Only one CUDA context may be created on the device across all processes in the system. 
-    - Prohibited compute mode: No CUDA context can be created on the device.
+    * Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
+    * Exclusive-process compute mode: Only one CUDA context may be created on the device across all processes in the system. 
+    * Prohibited compute mode: No CUDA context can be created on the device.
 ## Mode Switches:
 GPUs having display output have some dedicates display VRAM known as primary surface that is used to refresh the display. There is an increase in primary surface usage when users initiate a mode switch of the display by changing the resolution.  
