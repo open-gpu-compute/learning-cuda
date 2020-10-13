@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>NVCC Compilation &mdash; Tutorials 0.0.1 documentation</title>
+  <title>Programming Interface &mdash; Tutorials 0.0.1 documentation</title>
   
 
   
@@ -86,61 +86,46 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction_to_cuda/README.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../programming_model/README.html">Programming Model</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">NVCC Compilation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#offline-compilation">Offline Compilation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#just-in-time-compilation">Just-in-Time Compilation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#binary-compatibility">Binary Compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ptx-compatibility">PTX Compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#application-compatibility">Application Compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#c-and-64-bit-compatibility">C++ and 64-bit Compatibility</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Programming Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#compilation">Compilation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nvcc-compilation">NVCC Compilation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#offline-compilation">Offline Compilation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#just-in-time-compilation">Just-in-Time Compilation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#cuda-runtime">CUDA runtime</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#device-memory">Device Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cuda-runtime">CUDA runtime</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#device-memory">Device Memory</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#l2-cache">L2 Cache</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#l2-cache-set-aside-for-persisting-accesses">L2 cache Set-Aside for Persisting Accesses</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#l2-access-properties">L2 Access Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#reset-l2-access-to-normal">Reset L2 Access to Normal</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cuda-stream">CUDA Stream</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#utilization-of-l2-set-aside-cache">Utilization of L2 set-aside cache.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#query-properties-of-l2-cache">Query properties of L2 cache</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#shared-memory">Shared Memory</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#quick-hands-on">Quick Hands on</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#page-locked-memory">Page-Locked memory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#write-combining-memory">Write-Combining Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#page-locked-and-mapped-memory">Page-Locked and Mapped memory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#page-locked-memory">Page-Locked memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapped-memory">Mapped Memory</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#mapped-memory">Mapped Memory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#asynchronous-concurrent-execution">Asynchronous Concurrent Execution</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#concurrent-execution-between-host-and-device">Concurrent Execution between Host and Device</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#concurrent-kernel-execution">Concurrent Kernel Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#overlap-of-data-transfer-and-kernel-execution">Overlap of Data Transfer and Kernel Execution</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#asynchronous-concurrent-execution">Asynchronous Concurrent Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#streams">Streams</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creation-and-destruction-of-stream">Creation and Destruction of Stream</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#explicit-synchronization">Explicit Synchronization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#host-functions-callbacks">Host Functions (Callbacks)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#graphs">Graphs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#events">Events</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#multi-device-system">Multi-Device System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#peer-to-peer-memory-access">Peer-to-Peer Memory Access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#unified-virtual-address-space">Unified Virtual Address Space</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#error-checking">Error Checking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#texture-and-surface-memory">Texture and Surface Memory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#layered-textures">Layered Textures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cubemap-textures">Cubemap Textures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-device-system">Multi-Device System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#peer-to-peer-memory-access">Peer-to-Peer Memory Access</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#surface-memory">Surface Memory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#cubemap-surface">Cubemap surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unified-virtual-address-space">Unified Virtual Address Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#texture-and-surface-memory">Texture and Surface Memory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Quick Hands On</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#surface-memory">Surface Memory</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#versioning-and-compatibility">Versioning and Compatibility</a></li>
@@ -196,7 +181,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>NVCC Compilation</li>
+      <li>Programming Interface</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -215,35 +200,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="nvcc-compilation">
-<h1>NVCC Compilation<a class="headerlink" href="#nvcc-compilation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="programming-interface">
+<h1>Programming Interface<a class="headerlink" href="#programming-interface" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="compilation">
+<h2>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="nvcc-compilation">
+<h3>NVCC Compilation<a class="headerlink" href="#nvcc-compilation" title="Permalink to this headline">¶</a></h3>
 <p>Kernels can be either written using a higher-level language like C++ or using CUDA instruction set architecture, called PTX.
 In both cases, <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> is used to convert Kernels into binary code.</p>
+</div>
 <div class="section" id="offline-compilation">
-<h2>Offline Compilation<a class="headerlink" href="#offline-compilation" title="Permalink to this headline">¶</a></h2>
+<h3>Offline Compilation<a class="headerlink" href="#offline-compilation" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">nvcc</span></code> separates the host code from the device code.
 The separated device code is compiled into PTX and/or binary code.
 <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> also removes CUDA built-in syntax and variables like <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;...&gt;&gt;&gt;</span></code> from the host code.
 The modified host code is output either as C++ code that is left to be compiled using another tool or as object code directly by letting <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> invoke the host compiler during the last compilation stage.</p>
 </div>
 <div class="section" id="just-in-time-compilation">
-<h2>Just-in-Time Compilation<a class="headerlink" href="#just-in-time-compilation" title="Permalink to this headline">¶</a></h2>
+<h3>Just-in-Time Compilation<a class="headerlink" href="#just-in-time-compilation" title="Permalink to this headline">¶</a></h3>
 <p>PTX code loaded by an application at runtime can be compiled further to binary code by the device driver. This is called just-in-time compilation. Just-in-time compilation increases application load time but allows the application to benefit from any new compiler improvements coming with each new device driver.
 NVRTC compiler can be used to compile CUDA C++ device code to PTX at runtime.</p>
 </div>
-<div class="section" id="binary-compatibility">
-<h2>Binary Compatibility<a class="headerlink" href="#binary-compatibility" title="Permalink to this headline">¶</a></h2>
-<p>Compute capability is a version number, also called “SM version”, that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.
-Binary code is architecture-specific and different for different compute capabilities.
-Compute capability can be specified in NVCC while compiling the code using compiler option <code class="docutils literal notranslate"><span class="pre">code</span></code>. For example, compiling with <code class="docutils literal notranslate"><span class="pre">-code=sm_35</span></code> produces binary code for devices of compute capability 3.5.</p>
 </div>
-<div class="section" id="ptx-compatibility">
-<h2>PTX Compatibility<a class="headerlink" href="#ptx-compatibility" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Compute capability is a version number, also called “SM version”, that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.</p>
+<p>Binary code is architecture-specific and different for different compute capabilities.
+Compute capability can be specified in NVCC while compiling the code using compiler option <code class="docutils literal notranslate"><span class="pre">code</span></code>. For example, compiling with <code class="docutils literal notranslate"><span class="pre">-code=sm_35</span></code> produces binary code for devices of compute capability 3.5.</p>
 <p>PTX instructions are also architecture-specific. Some PTX instructions are only supported by higher versions of compute capability.
 The <code class="docutils literal notranslate"><span class="pre">-arch</span></code> compiler option specifies the compute capability that is assumed when compiling C++ to PTX code.</p>
-</div>
-<div class="section" id="application-compatibility">
-<h2>Application Compatibility<a class="headerlink" href="#application-compatibility" title="Permalink to this headline">¶</a></h2>
 <p>For an application to be compatibility with a GPU, it must load binary or PTX code that is compatible with this compute capability as described in the above sections.For example,</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvcc</span> <span class="n">vector_add</span><span class="o">.</span><span class="n">cu</span>
         <span class="o">-</span><span class="n">gencode</span> <span class="n">arch</span><span class="o">=</span><span class="n">compute_50</span><span class="p">,</span><span class="n">code</span><span class="o">=</span><span class="n">sm_50</span>
@@ -251,23 +236,16 @@ The <code class="docutils literal notranslate"><span class="pre">-arch</span></c
 </pre></div>
 </div>
 <p>generates binary code compatible with compute capability 5.0 and 6.0.</p>
-</div>
-<div class="section" id="c-and-64-bit-compatibility">
-<h2>C++ and 64-bit Compatibility<a class="headerlink" href="#c-and-64-bit-compatibility" title="Permalink to this headline">¶</a></h2>
 <p>Host code has full C++ support, while only a subset of C++ is supported for device code.
 The 64-bit version of nvcc can compile device code in 32-bit mode using  <code class="docutils literal notranslate"><span class="pre">-m32</span></code> compiler option.</p>
 </div>
-</div>
 <div class="section" id="cuda-runtime">
-<h1>CUDA runtime<a class="headerlink" href="#cuda-runtime" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="initialization">
-<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<h2>CUDA runtime<a class="headerlink" href="#cuda-runtime" title="Permalink to this headline">¶</a></h2>
 <p>Runtime initializes whenever the first runtime function is called.
 The runtime creates a CUDA context(runtime environment) for each device in the system, and this context is shared among all host threads.
 When a host thread calls <code class="docutils literal notranslate"><span class="pre">cudaDeviceReset()</span></code>, this destroys the primary context of the device the host thread currently operates on.</p>
-</div>
 <div class="section" id="device-memory">
-<h2>Device Memory<a class="headerlink" href="#device-memory" title="Permalink to this headline">¶</a></h2>
+<h3>Device Memory<a class="headerlink" href="#device-memory" title="Permalink to this headline">¶</a></h3>
 <p>The runtime provides built-in functions to allocate, deallocate and copy device memory. It also provides functions to transfer data between the device and host memory.
 The device memory can be allocated as linear memory or as CUDA arrays.
 Linear memory uses a single unified address space, which allows separately allocated entities to address each other via pointers.
@@ -275,39 +253,25 @@ Linear memory is allocated using <code class="docutils literal notranslate"><spa
 <code class="docutils literal notranslate"><span class="pre">cudaMallocPitch()</span></code> and <code class="docutils literal notranslate"><span class="pre">cudaMalloc3D()</span></code> is recommended for 2D and 3D array allocation respectively.( see <code class="docutils literal notranslate"><span class="pre">3d_matrix_allocte.cu</span></code> )
 <code class="docutils literal notranslate"><span class="pre">cudaGetSymbolAddress()</span></code> is used to retrieve the address pointing to the memory allocated for a variable declared in global memory space. The size of the allocated memory is obtained through <code class="docutils literal notranslate"><span class="pre">cudaGetSymbolSize()</span></code>.</p>
 </div>
+</div>
 <div class="section" id="l2-cache">
 <h2>L2 Cache<a class="headerlink" href="#l2-cache" title="Permalink to this headline">¶</a></h2>
 <p>Data that is being accessed frequently from global memory is known as persisting data access.
-Data that is being accessed only once is known as streaming data access.</p>
-<div class="section" id="l2-cache-set-aside-for-persisting-accesses">
-<h3>L2 cache Set-Aside for Persisting Accesses<a class="headerlink" href="#l2-cache-set-aside-for-persisting-accesses" title="Permalink to this headline">¶</a></h3>
-<p>A portion of the L2 cache can be set aside to be used for persisting data accesses to global memory.
-Persisting accesses have prioritized use of this set-aside portion of L2 cache, whereas normal or streaming, accesses to global memory can only utilize this portion of L2 when it is unused by persisting accesses.</p>
-</div>
-<div class="section" id="l2-access-properties">
-<h3>L2 Access Properties<a class="headerlink" href="#l2-access-properties" title="Permalink to this headline">¶</a></h3>
-<p>Three types of access properties are defined for different global memory data accesses:
+Data that is being accessed only once is known as streaming data access.
+A portion of the L2 cache can be set aside to be used for persisting data accesses to global memory.
+Persisting accesses have prioritized use of this set-aside portion of L2 cache, whereas normal or streaming, accesses to global memory can only utilize this portion of L2 when it is unused by persisting accesses.
+Three types of access properties are defined for different global memory data accesses:
 * <code class="docutils literal notranslate"><span class="pre">cudaAccessPropertyStreaming</span></code>: Memory accesses that occur with the streaming property are less likely to persist in the L2 cache because these accesses are preferentially evicted.
 * <code class="docutils literal notranslate"><span class="pre">cudaAccessPropertyPersisting</span></code>: Memory accesses that arise with the persisting property are more likely to stay in the L2 cache because these accesses are preferentially retained in the set-aside portion of L2 cache.
-* <code class="docutils literal notranslate"><span class="pre">cudaAccessPropertyNormal</span></code>: This access property forcibly resets previously applied persisting access property to a normal status.</p>
-</div>
-<div class="section" id="reset-l2-access-to-normal">
-<h3>Reset L2 Access to Normal<a class="headerlink" href="#reset-l2-access-to-normal" title="Permalink to this headline">¶</a></h3>
-<p>A persisting L2cache may be persisting long after a CUDA kernel is executed.
-It’s a good practice to clear L2 persisting cache and its access properties.</p>
-</div>
-<div class="section" id="cuda-stream">
-<h3>CUDA Stream<a class="headerlink" href="#cuda-stream" title="Permalink to this headline">¶</a></h3>
-<p>A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.</p>
-</div>
+* <code class="docutils literal notranslate"><span class="pre">cudaAccessPropertyNormal</span></code>: This access property forcibly resets previously applied persisting access property to a normal status.
+A persisting L2cache may be persisting long after a CUDA kernel is executed.
+It’s a good practice to clear L2 persisting cache and its access properties.
+<strong>CUDA Stream</strong>: A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.</p>
 <div class="section" id="utilization-of-l2-set-aside-cache">
 <h3>Utilization of L2 set-aside cache.<a class="headerlink" href="#utilization-of-l2-set-aside-cache" title="Permalink to this headline">¶</a></h3>
 <p>Multiple CUDA kernels executing concurrently on different streams have different access policy window, but L2 set-aside cache is shared among all the streams.
-The net utilization of L2 set-aside cache is the sum of  L2 set aside used in all the concurrent kernels.</p>
-</div>
-<div class="section" id="query-properties-of-l2-cache">
-<h3>Query properties of L2 cache<a class="headerlink" href="#query-properties-of-l2-cache" title="Permalink to this headline">¶</a></h3>
-<p>Properties related to L2 cache are a part of <code class="docutils literal notranslate"><span class="pre">cudaDeviceProp</span></code> struct and can be queried using CUDA runtime API <code class="docutils literal notranslate"><span class="pre">cudaGetDeviceProperties</span></code></p>
+The net utilization of L2 set-aside cache is the sum of  L2 set aside used in all the concurrent kernels.
+Properties related to L2 cache are a part of <code class="docutils literal notranslate"><span class="pre">cudaDeviceProp</span></code> struct and can be queried using CUDA runtime API <code class="docutils literal notranslate"><span class="pre">cudaGetDeviceProperties</span></code></p>
 </div>
 </div>
 <div class="section" id="shared-memory">
@@ -403,46 +367,35 @@ Its is faster than global memory and reduce global memory access calls.</p>
 In this shared memory implementation, each thread block is responsible for computing one square sub-matrix Csub of C and each thread within the block is responsible for computing one element of Csub.</p>
 </div>
 </div>
+<div class="section" id="page-locked-and-mapped-memory">
+<h2>Page-Locked and Mapped memory<a class="headerlink" href="#page-locked-and-mapped-memory" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="page-locked-memory">
-<h2>Page-Locked memory<a class="headerlink" href="#page-locked-memory" title="Permalink to this headline">¶</a></h2>
-<p>CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>)<br />Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.</p>
-<div class="section" id="write-combining-memory">
-<h3>Write-Combining Memory<a class="headerlink" href="#write-combining-memory" title="Permalink to this headline">¶</a></h3>
-<p>By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag <code class="docutils literal notranslate"><span class="pre">cudaHostAllocWriteCombined</span></code> to <code class="docutils literal notranslate"><span class="pre">cudaHostAlloc()</span></code>.
+<h3>Page-Locked memory<a class="headerlink" href="#page-locked-memory" title="Permalink to this headline">¶</a></h3>
+<p>CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>)<br />Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
+By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag <code class="docutils literal notranslate"><span class="pre">cudaHostAllocWriteCombined</span></code> to <code class="docutils literal notranslate"><span class="pre">cudaHostAlloc()</span></code>.
 Write-combining memory frees up the host’s L1 and L2 cache resources, making more cache available to the rest of the application.</p>
 </div>
-</div>
 <div class="section" id="mapped-memory">
-<h2>Mapped Memory<a class="headerlink" href="#mapped-memory" title="Permalink to this headline">¶</a></h2>
+<h3>Mapped Memory<a class="headerlink" href="#mapped-memory" title="Permalink to this headline">¶</a></h3>
 <p>A block of page-locked host memory can also be mapped into the address space of the device by passing flag <code class="docutils literal notranslate"><span class="pre">cudaHostAllocMapped</span></code> to <code class="docutils literal notranslate"><span class="pre">cudaHostAlloc()</span></code> or by passing flag cudaHostRegisterMapped to cudaHostRegister().
 Such a block has therefore in general two addresses: one in host memory that is returned by <code class="docutils literal notranslate"><span class="pre">cudaHostAlloc()</span></code> or <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>, and one in device memory that can be retrieved using <code class="docutils literal notranslate"><span class="pre">cudaHostGetDevicePointer()</span></code> and then used to access the block from within a kernel.</p>
 </div>
+</div>
 <div class="section" id="asynchronous-concurrent-execution">
 <h2>Asynchronous Concurrent Execution<a class="headerlink" href="#asynchronous-concurrent-execution" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="concurrent-execution-between-host-and-device">
-<h3>Concurrent Execution between Host and Device<a class="headerlink" href="#concurrent-execution-between-host-and-device" title="Permalink to this headline">¶</a></h3>
-<p>Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
+<p><strong>Concurrent Execution between Host and Device</strong>: Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
 Many device operations(streams) can be queued up using asynchronous calls if appropriate resources are available.
-This relieves the host thread of much of the responsibility to manage the device, leaving it free for other tasks.</p>
-</div>
-<div class="section" id="concurrent-kernel-execution">
-<h3>Concurrent Kernel Execution<a class="headerlink" href="#concurrent-kernel-execution" title="Permalink to this headline">¶</a></h3>
-<p>Machines with high compute capabilities (&gt;2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.</p>
-</div>
-<div class="section" id="overlap-of-data-transfer-and-kernel-execution">
-<h3>Overlap of Data Transfer and Kernel Execution<a class="headerlink" href="#overlap-of-data-transfer-and-kernel-execution" title="Permalink to this headline">¶</a></h3>
-<p>Some devices can perform asynchronous memory transfer to and from GPU with kernels running concurrently.
+This relieves the host thread of much of the responsibility to manage the device, leaving it free for other tasks.
+<strong>Concurrent Kernel Execution</strong>: Machines with high compute capabilities (&gt;2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
+Some devices can perform asynchronous memory transfer to and from GPU with kernels running concurrently.
 asyncEngineCount property is used to check whether a device supports this functionality or not.
 Some devices also support concurrent and overlapping data transfers.</p>
-</div>
 </div>
 <div class="section" id="streams">
 <h2>Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h2>
 <p>Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels.
-If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.</p>
-<div class="section" id="creation-and-destruction-of-stream">
-<h3>Creation and Destruction of Stream<a class="headerlink" href="#creation-and-destruction-of-stream" title="Permalink to this headline">¶</a></h3>
-<p>The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device  and one memory copy from device to host:</p>
+If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.
+The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device  and one memory copy from device to host:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cudaStream_t</span> <span class="n">stream</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="n">cudaStreamCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stream</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
@@ -458,12 +411,8 @@ If kernel launches do not specify a stream, the commands are run on default stre
     <span class="n">cudaStreamDestroy</span><span class="p">(</span><span class="n">stream</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="explicit-synchronization">
-<h3>Explicit Synchronization<a class="headerlink" href="#explicit-synchronization" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">cudaDeviceSynchronize()</span></code> waits until all preceding commands in all streams of all host threads have completed.
 <code class="docutils literal notranslate"><span class="pre">cudaStreamSynchronize()</span></code>takes a stream as a parameter and waits until all preceding commands in the given stream have completed.</p>
-</div>
 <div class="section" id="host-functions-callbacks">
 <h3>Host Functions (Callbacks)<a class="headerlink" href="#host-functions-callbacks" title="Permalink to this headline">¶</a></h3>
 <p>The runtime provides a way to insert a CPU function call at any point into a stream via cudaLaunchHostFunc()</p>
@@ -516,9 +465,8 @@ A host thread can set the device it operates on at any time by calling <code cla
 </pre></div>
 </div>
 <p>This code lets you print properties of device on the system.</p>
-</div>
 <div class="section" id="peer-to-peer-memory-access">
-<h2>Peer-to-Peer Memory Access<a class="headerlink" href="#peer-to-peer-memory-access" title="Permalink to this headline">¶</a></h2>
+<h3>Peer-to-Peer Memory Access<a class="headerlink" href="#peer-to-peer-memory-access" title="Permalink to this headline">¶</a></h3>
 <p>In a system with multiple devices, devices can address each other’s memory depending upon their compute capability.
 This peer-to-peer memory access feature is supported between two devices if <code class="docutils literal notranslate"><span class="pre">cudaDeviceCanAccessPeer()</span></code> returns true for these two devices.
 A unified address space is used for both devices, so the same pointer can be used to address memory from both devices as shown in the code sample below</p>
@@ -539,14 +487,12 @@ A unified address space is used for both devices, so the same pointer can be use
 <p>Memory copies can be performed between the memories of two different devices in a multi-device set up.
 This is done using <code class="docutils literal notranslate"><span class="pre">cudaMemcpyPeer()</span></code>, <code class="docutils literal notranslate"><span class="pre">cudaMemcpyPeerAsync()</span></code>, <code class="docutils literal notranslate"><span class="pre">cudaMemcpy3DPeer()</span></code>, or <code class="docutils literal notranslate"><span class="pre">cudaMemcpy3DPeerAsync()</span></code>.</p>
 </div>
+</div>
 <div class="section" id="unified-virtual-address-space">
 <h2>Unified Virtual Address Space<a class="headerlink" href="#unified-virtual-address-space" title="Permalink to this headline">¶</a></h2>
 <p>A single unified address space is used for both device and host. Memory allocation in host takes place through CUDA API calls.
-<code class="docutils literal notranslate"><span class="pre">cudaPointerGetAttributes()</span></code> is used to determine the location of the memory on the host and devices allocated through CUDA.</p>
-</div>
-<div class="section" id="error-checking">
-<h2>Error Checking<a class="headerlink" href="#error-checking" title="Permalink to this headline">¶</a></h2>
-<p>The runtime maintains an error variable, called <code class="docutils literal notranslate"><span class="pre">cudaPeekAtLastError()</span></code>, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.</p>
+<code class="docutils literal notranslate"><span class="pre">cudaPointerGetAttributes()</span></code> is used to determine the location of the memory on the host and devices allocated through CUDA.
+The runtime maintains an error variable, called <code class="docutils literal notranslate"><span class="pre">cudaPeekAtLastError()</span></code>, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.</p>
 </div>
 <div class="section" id="texture-and-surface-memory">
 <h2>Texture and Surface Memory<a class="headerlink" href="#texture-and-surface-memory" title="Permalink to this headline">¶</a></h2>
@@ -561,21 +507,57 @@ Texture Reference and Objects have the following attributes (see example texture
 * Type: type of texel ( texture elements)
 * Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
 * Addressing mode
-* Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
-For code sample on how to initiate texture see <code class="docutils literal notranslate"><span class="pre">src/txture.cu</span></code></p>
-<div class="section" id="layered-textures">
-<h3>Layered Textures<a class="headerlink" href="#layered-textures" title="Permalink to this headline">¶</a></h3>
-<p>A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.</p>
+* Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates</p>
+<div class="section" id="id1">
+<h3>Quick Hands On<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>// texture object is a kernel argument
+__global__ void kernel(cudaTextureObject_t tex) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  float x = tex1Dfetch&lt;float&gt;(tex, i);
+  //  Do something with x
+}
+
+
+int main() {
+  // declare and allocate memory
+  float *buffer;
+  cudaMalloc(&amp;buffer, N*sizeof(float));
+
+  // create texture object
+  cudaResourceDesc resDesc;
+  memset(&amp;resDesc, 0, sizeof(resDesc));
+  resDesc.resType = cudaResourceTypeLinear;
+  resDesc.res.linear.devPtr = buffer;
+  resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
+  
+  resDesc.res.linear.sizeInBytes = N*sizeof(float);
+
+  const cudaTextureDesc texDesc;
+  memset(&amp;texDesc, 0, sizeof(texDesc));
+  texDesc.readMode = cudaReadModeElementType;
+
+  // create texture object: we only have to do this once!
+  cudaTextureObject_t tex;
+  cudaCreateTextureObject(&amp;tex, &amp;resDesc, &amp;texDesc, NULL);
+
+  kernel &lt;&lt;&lt;512, 512&gt;&gt;&gt;(tex); // pass texture as argument
+
+  // destroy texture object
+  cudaDestroyTextureObject(tex);
+
+  cudaFree(buffer);
+}
+</pre></div>
 </div>
-<div class="section" id="cubemap-textures">
-<h3>Cubemap Textures<a class="headerlink" href="#cubemap-textures" title="Permalink to this headline">¶</a></h3>
-<p>A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
+<p>This code iniates a texture a memory and runs a kernel on it.
+See full code at <code class="docutils literal notranslate"><span class="pre">src/txture.cu</span></code>.</p>
+<p>A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
+<strong>Cubemap Textures</strong>: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
 A layered texture can only be a CUDA array by calling <code class="docutils literal notranslate"><span class="pre">cudaMalloc3DArray()</span></code> with the <code class="docutils literal notranslate"><span class="pre">cudaArrayCubemap</span></code> flag.
 A cubemap layered texture is a layered texture whose layers are cubemaps of the same dimension.</p>
 </div>
-</div>
 <div class="section" id="surface-memory">
-<h2>Surface Memory<a class="headerlink" href="#surface-memory" title="Permalink to this headline">¶</a></h2>
+<h3>Surface Memory<a class="headerlink" href="#surface-memory" title="Permalink to this headline">¶</a></h3>
 <p>CUDA arrays can be written/read from surface memory.
 Similar to texture, there are two ways to access surface memory: surface object or surface reference.
 <code class="docutils literal notranslate"><span class="pre">cudaCreateSurfaceObject()</span></code>  is used to create a surface object.
@@ -583,8 +565,6 @@ A surface reference is declared at file scope as a variable of type surface:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span><span class="o">&lt;</span><span class="n">void</span><span class="p">,</span> <span class="n">Type</span><span class="o">&gt;</span> <span class="n">surfRef</span><span class="p">;</span>
 </pre></div>
 </div>
-<div class="section" id="cubemap-surface">
-<h3>Cubemap surface<a class="headerlink" href="#cubemap-surface" title="Permalink to this headline">¶</a></h3>
 <p>Similar to cubemap texture, cubemap surface is two-layered surface memory</p>
 </div>
 </div>
@@ -593,7 +573,7 @@ A surface reference is declared at file scope as a variable of type surface:</p>
 <p>There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
 Version of CUDA API can be accessed via <code class="docutils literal notranslate"><span class="pre">CUDA_VERSION</span></code>.
 The Driver API Is Backward but Not Forward Compatible :</p>
-<p><img alt="cpu vs gpu architecture" src="../_images/versioning.PNG" /></p>
+<p><img alt="versioning" src="../_images/versioning.PNG" /></p>
 </div>
 <div class="section" id="compute-modes">
 <h2>Compute Modes<a class="headerlink" href="#compute-modes" title="Permalink to this headline">¶</a></h2>
