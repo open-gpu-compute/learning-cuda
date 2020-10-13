@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Hardware Implementations &mdash; Tutorials 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="NVCC Compilation" href="../programming_interface/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Tutorials
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CUDA Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction_to_cuda/README.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_model/README.html">Programming Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_interface/README.html">NVCC Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_interface/README.html#cuda-runtime">CUDA runtime</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hardware Implementations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simt-architecture">SIMT Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-multithreading">Hardware Multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#performance-guidlines">Performance Guidlines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overall-performance">Overall Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maximize-utilization">Maximize utilization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#application-level-maximize-utilization">Application Level maximize utilization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#device-level-maximize-utilization">Device Level maximize utilization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiprocessor-level-maximize-utilization">Multiprocessor Level maximize utilization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#maximize-memory-throughput">Maximize Memory Throughput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maximize-instruction-throughput">Maximize Instruction Throughput</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Tutorials</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Hardware Implementations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hardware_and_performance_guidlines/README.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hardware-implementations">
+<h1>Hardware Implementations<a class="headerlink" href="#hardware-implementations" title="Permalink to this headline">¶</a></h1>
+<p>NVIDIA GPUs are built using an array of Streaming Multiprocessors(SM).
+When a host executes a kernel grid, blocks are enumerated and assigned to different SMs that execute block threads concurrently.</p>
+<div class="section" id="simt-architecture">
+<h2>SIMT Architecture<a class="headerlink" href="#simt-architecture" title="Permalink to this headline">¶</a></h2>
+<p>SIMT (Single-Instruction, Multiple-Thread) is an architecture used by SMs to execute hundreds of threads concurrently.
+The multiprocessor creates, manages, schedules, and executes threads in groups of 32 parallel threads called warps.
+When a multiprocessor is given one or more thread blocks to execute, it partitions them into warps, and each warp gets scheduled by a warp scheduler for execution.
+GPUs uses Independent Thread Scheduling that maintains execution state per thread, including a program counter and call stack, and can yield execution at a per-thread granularity.</p>
+</div>
+<div class="section" id="hardware-multithreading">
+<h2>Hardware Multithreading<a class="headerlink" href="#hardware-multithreading" title="Permalink to this headline">¶</a></h2>
+<p>Each multiprocessor has a set of 32-bit registers that are partitioned among warps, and shared memory that is partitioned among the thread blocks.
+The number of blocks and warps that can reside processed together on SMs for a given kernel depends on the number of registers and shared memory used by the kernel and the number of registers and shared memory available on the multiprocessor.</p>
+</div>
+</div>
+<div class="section" id="performance-guidlines">
+<h1>Performance Guidlines<a class="headerlink" href="#performance-guidlines" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overall-performance">
+<h2>Overall Performance<a class="headerlink" href="#overall-performance" title="Permalink to this headline">¶</a></h2>
+<p>CUDA optimizes the following features of a GPU:
+* Maximize parallel execution
+* Optimize memory usage
+* Optimize instruction usage</p>
+</div>
+<div class="section" id="maximize-utilization">
+<h2>Maximize utilization<a class="headerlink" href="#maximize-utilization" title="Permalink to this headline">¶</a></h2>
+<p>To maximize utilization, the application should be structured in a way that it keeps most of the elements of the GPU busy all the time.</p>
+<div class="section" id="application-level-maximize-utilization">
+<h3>Application Level maximize utilization<a class="headerlink" href="#application-level-maximize-utilization" title="Permalink to this headline">¶</a></h3>
+<p>The application should use asynchronous functions calls and streams to maximize parallel execution between the host, the devices, and the bus connecting the host to the devices.</p>
+</div>
+<div class="section" id="device-level-maximize-utilization">
+<h3>Device Level maximize utilization<a class="headerlink" href="#device-level-maximize-utilization" title="Permalink to this headline">¶</a></h3>
+<p>At a lower level, the application should maximize parallel execution between the multiprocessors of a device.</p>
+</div>
+<div class="section" id="multiprocessor-level-maximize-utilization">
+<h3>Multiprocessor Level maximize utilization<a class="headerlink" href="#multiprocessor-level-maximize-utilization" title="Permalink to this headline">¶</a></h3>
+<p>At an even lower level, the application should maximize parallel execution between the various functional units within a multiprocessor.
+The number of clock cycles it takes for a warp to be ready to execute its next instruction is called the latency.
+All warp schedulers should always have some instruction to issue for some warp at every clock cycle during the latency period to achieve full utilization.</p>
+</div>
+</div>
+<div class="section" id="maximize-memory-throughput">
+<h2>Maximize Memory Throughput<a class="headerlink" href="#maximize-memory-throughput" title="Permalink to this headline">¶</a></h2>
+<p>Minimizing data transfers with low bandwidth can help in maximizing the memory throughput of an application.</p>
+</div>
+<div class="section" id="maximize-instruction-throughput">
+<h2>Maximize Instruction Throughput<a class="headerlink" href="#maximize-instruction-throughput" title="Permalink to this headline">¶</a></h2>
+<p>Minimize the use of arithmetic instructions with low throughput; this includes trading precision for speed when it does not affect the result, such as using single-precision instead of double-precision.
+Minimize divergent warps caused by control flow instructions
+Reduce the number of instructions</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../programming_interface/README.html" class="btn btn-neutral float-left" title="NVCC Compilation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Yash Jain
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
