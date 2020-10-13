@@ -12,17 +12,15 @@ The modified host code is output either as C++ code that is left to be compiled 
 
 PTX code loaded by an application at runtime can be compiled further to binary code by the device driver. This is called just-in-time compilation. Just-in-time compilation increases application load time but allows the application to benefit from any new compiler improvements coming with each new device driver.
 NVRTC compiler can be used to compile CUDA C++ device code to PTX at runtime.
-##  Binary Compatibility
+##  Binary, PTX and Application Compatibility
 
 Compute capability is a version number, also called "SM version", that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.
 
 Binary code is architecture-specific and different for different compute capabilities.
 Compute capability can be specified in NVCC while compiling the code using compiler option `code`. For example, compiling with `-code=sm_35` produces binary code for devices of compute capability 3.5.
-## PTX Compatibility
 
 PTX instructions are also architecture-specific. Some PTX instructions are only supported by higher versions of compute capability.
 The `-arch` compiler option specifies the compute capability that is assumed when compiling C++ to PTX code.
-## Application Compatibility
 
 For an application to be compatibility with a GPU, it must load binary or PTX code that is compatible with this compute capability as described in the above sections.For example,
 ```
@@ -31,14 +29,13 @@ nvcc vector_add.cu
         -gencode arch=compute_60,code=sm_60
 ```
 generates binary code compatible with compute capability 5.0 and 6.0.
-## C++ and 64-bit Compatibility
+
 
 Host code has full C++ support, while only a subset of C++ is supported for device code.
 The 64-bit version of nvcc can compile device code in 32-bit mode using  `-m32` compiler option.
 
 # CUDA runtime
 
-## Initialization
 Runtime initializes whenever the first runtime function is called.
 The runtime creates a CUDA context(runtime environment) for each device in the system, and this context is shared among all host threads.
 When a host thread calls `cudaDeviceReset()`, this destroys the primary context of the device the host thread currently operates on.
@@ -278,7 +275,48 @@ Texture Reference and Objects have the following attributes (see example texture
     * Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
     * Addressing mode
     * Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
-For code sample on how to initiate texture see `src/txture.cu`
+### Quick Hands On
+```
+// texture object is a kernel argument
+__global__ void kernel(cudaTextureObject_t tex) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  float x = tex1Dfetch<float>(tex, i);
+  //  Do something with x
+}
+
+
+int main() {
+  // declare and allocate memory
+  float *buffer;
+  cudaMalloc(&buffer, N*sizeof(float));
+
+  // create texture object
+  cudaResourceDesc resDesc;
+  memset(&resDesc, 0, sizeof(resDesc));
+  resDesc.resType = cudaResourceTypeLinear;
+  resDesc.res.linear.devPtr = buffer;
+  resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
+  
+  resDesc.res.linear.sizeInBytes = N*sizeof(float);
+
+  const cudaTextureDesc texDesc;
+  memset(&texDesc, 0, sizeof(texDesc));
+  texDesc.readMode = cudaReadModeElementType;
+
+  // create texture object: we only have to do this once!
+  cudaTextureObject_t tex;
+  cudaCreateTextureObject(&tex, &resDesc, &texDesc, NULL);
+
+  kernel <<<512, 512>>>(tex); // pass texture as argument
+
+  // destroy texture object
+  cudaDestroyTextureObject(tex);
+
+  cudaFree(buffer);
+}
+```
+This code iniates a texture a memory and runs a kernel on it. 
+See full code at `src/txture.cu`.
 
 A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
 **Cubemap Textures**: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
