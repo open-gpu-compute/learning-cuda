@@ -15,6 +15,7 @@ NVRTC compiler can be used to compile CUDA C++ device code to PTX at runtime.
 ##  Binary Compatibility
 
 Compute capability is a version number, also called "SM version", that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.
+
 Binary code is architecture-specific and different for different compute capabilities.
 Compute capability can be specified in NVCC while compiling the code using compiler option `code`. For example, compiling with `-code=sm_35` produces binary code for devices of compute capability 3.5.
 ## PTX Compatibility
@@ -51,23 +52,18 @@ Linear memory is allocated using `cudaMalloc()` and freed using `cudaFree()`, an
 ## L2 Cache
 Data that is being accessed frequently from global memory is known as persisting data access.
 Data that is being accessed only once is known as streaming data access.
-### L2 cache Set-Aside for Persisting Accesses
 A portion of the L2 cache can be set aside to be used for persisting data accesses to global memory. 
 Persisting accesses have prioritized use of this set-aside portion of L2 cache, whereas normal or streaming, accesses to global memory can only utilize this portion of L2 when it is unused by persisting accesses.
-### L2 Access Properties
 Three types of access properties are defined for different global memory data accesses:
     * `cudaAccessPropertyStreaming`: Memory accesses that occur with the streaming property are less likely to persist in the L2 cache because these accesses are preferentially evicted.
     * `cudaAccessPropertyPersisting`: Memory accesses that arise with the persisting property are more likely to stay in the L2 cache because these accesses are preferentially retained in the set-aside portion of L2 cache.
     * `cudaAccessPropertyNormal`: This access property forcibly resets previously applied persisting access property to a normal status.
-### Reset L2 Access to Normal
 A persisting L2cache may be persisting long after a CUDA kernel is executed. 
 It's a good practice to clear L2 persisting cache and its access properties.
-### CUDA Stream
-A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.  
+**CUDA Stream**: A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.  
 ### Utilization of L2 set-aside cache.
 Multiple CUDA kernels executing concurrently on different streams have different access policy window, but L2 set-aside cache is shared among all the streams. 
 The net utilization of L2 set-aside cache is the sum of  L2 set aside used in all the concurrent kernels.
-### Query properties of L2 cache
 Properties related to L2 cache are a part of `cudaDeviceProp` struct and can be queried using CUDA runtime API `cudaGetDeviceProperties`
 ## Shared Memory
 Shared memory  is allocated using `__shared__` memory space specifier.
@@ -162,7 +158,6 @@ In this shared memory implementation, each thread block is responsible for compu
 ## Page-Locked memory
 CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by `malloc()`)  
 Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
-### Write-Combining Memory
 By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag `cudaHostAllocWriteCombined` to `cudaHostAlloc()`.
 Write-combining memory frees up the host's L1 and L2 cache resources, making more cache available to the rest of the application. 
 ## Mapped Memory
@@ -173,14 +168,12 @@ Such a block has therefore in general two addresses: one in host memory that is 
 Many device operations(streams) can be queued up using asynchronous calls if appropriate resources are available.
 This relieves the host thread of much of the responsibility to manage the device, leaving it free for other tasks.
 **Concurrent Kernel Execution**: Machines with high compute capabilities (>2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
-### Overlap of Data Transfer and Kernel Execution
 Some devices can perform asynchronous memory transfer to and from GPU with kernels running concurrently.
 asyncEngineCount property is used to check whether a device supports this functionality or not.
 Some devices also support concurrent and overlapping data transfers.
 ## Streams
 Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels.
 If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.
-### Creation and Destruction of Stream
 The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device  and one memory copy from device to host:
 ```
 cudaStream_t stream[2];
@@ -198,7 +191,6 @@ for (int i = 0; i < 2; ++i)
     cudaStreamDestroy(stream[i]);
 ```
 
-### Explicit Synchronization
 `cudaDeviceSynchronize()` waits until all preceding commands in all streams of all host threads have completed.
 `cudaStreamSynchronize()`takes a stream as a parameter and waits until all preceding commands in the given stream have completed.
 ### Host Functions (Callbacks)
@@ -272,7 +264,7 @@ This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPee
 ## Unified Virtual Address Space
 A single unified address space is used for both device and host. Memory allocation in host takes place through CUDA API calls.
 `cudaPointerGetAttributes()` is used to determine the location of the memory on the host and devices allocated through CUDA. 
-**Error Checking**: The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
+The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
 ## Texture and Surface Memory 
 CUDA supports a subset of the texturing hardware that the GPU uses for graphics to access texture and surface memory.
 There are two different APIs to access texture and surface memory: 
@@ -286,8 +278,8 @@ Texture Reference and Objects have the following attributes (see example texture
     * Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
     * Addressing mode
     * Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
-For code sample on how to initiate texture see `src/txture.cu` 
-### Layered Textures
+For code sample on how to initiate texture see `src/txture.cu`
+
 A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
 **Cubemap Textures**: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
 A layered texture can only be a CUDA array by calling `cudaMalloc3DArray()` with the `cudaArrayCubemap` flag. 
@@ -300,7 +292,7 @@ A surface reference is declared at file scope as a variable of type surface:
 ```
 surface<void, Type> surfRef;
 ```
-**Cubemap surface** : Similar to cubemap texture, cubemap surface is two-layered surface memory
+Similar to cubemap texture, cubemap surface is two-layered surface memory
 ## Versioning and Compatibility
 There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
 Version of CUDA API can be accessed via `CUDA_VERSION`.
