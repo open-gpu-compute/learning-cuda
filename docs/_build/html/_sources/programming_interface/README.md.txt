@@ -1,27 +1,29 @@
-# NVCC Compilation
+# Programming Interface
+## Compilation
+
+### NVCC Compilation
 
 Kernels can be either written using a higher-level language like C++ or using CUDA instruction set architecture, called PTX.
 In both cases, `nvcc` is used to convert Kernels into binary code.
-## Offline Compilation
+### Offline Compilation
 
 `nvcc` separates the host code from the device code.
 The separated device code is compiled into PTX and/or binary code.
 `nvcc` also removes CUDA built-in syntax and variables like `<<<...>>>` from the host code.
 The modified host code is output either as C++ code that is left to be compiled using another tool or as object code directly by letting `nvcc` invoke the host compiler during the last compilation stage.
-## Just-in-Time Compilation
+### Just-in-Time Compilation
 
 PTX code loaded by an application at runtime can be compiled further to binary code by the device driver. This is called just-in-time compilation. Just-in-time compilation increases application load time but allows the application to benefit from any new compiler improvements coming with each new device driver.
 NVRTC compiler can be used to compile CUDA C++ device code to PTX at runtime.
-##  Binary Compatibility
+##  Compatibility
 
 Compute capability is a version number, also called "SM version", that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.
+
 Binary code is architecture-specific and different for different compute capabilities.
 Compute capability can be specified in NVCC while compiling the code using compiler option `code`. For example, compiling with `-code=sm_35` produces binary code for devices of compute capability 3.5.
-## PTX Compatibility
 
 PTX instructions are also architecture-specific. Some PTX instructions are only supported by higher versions of compute capability.
 The `-arch` compiler option specifies the compute capability that is assumed when compiling C++ to PTX code.
-## Application Compatibility
 
 For an application to be compatibility with a GPU, it must load binary or PTX code that is compatible with this compute capability as described in the above sections.For example,
 ```
@@ -30,18 +32,17 @@ nvcc vector_add.cu
         -gencode arch=compute_60,code=sm_60
 ```
 generates binary code compatible with compute capability 5.0 and 6.0.
-## C++ and 64-bit Compatibility
+
 
 Host code has full C++ support, while only a subset of C++ is supported for device code.
 The 64-bit version of nvcc can compile device code in 32-bit mode using  `-m32` compiler option.
 
-# CUDA runtime
+## CUDA runtime
 
-## Initialization
 Runtime initializes whenever the first runtime function is called.
 The runtime creates a CUDA context(runtime environment) for each device in the system, and this context is shared among all host threads.
 When a host thread calls `cudaDeviceReset()`, this destroys the primary context of the device the host thread currently operates on.
-## Device Memory
+### Device Memory
 The runtime provides built-in functions to allocate, deallocate and copy device memory. It also provides functions to transfer data between the device and host memory.
 The device memory can be allocated as linear memory or as CUDA arrays.
 Linear memory uses a single unified address space, which allows separately allocated entities to address each other via pointers.
@@ -51,23 +52,18 @@ Linear memory is allocated using `cudaMalloc()` and freed using `cudaFree()`, an
 ## L2 Cache
 Data that is being accessed frequently from global memory is known as persisting data access.
 Data that is being accessed only once is known as streaming data access.
-### L2 cache Set-Aside for Persisting Accesses
 A portion of the L2 cache can be set aside to be used for persisting data accesses to global memory. 
 Persisting accesses have prioritized use of this set-aside portion of L2 cache, whereas normal or streaming, accesses to global memory can only utilize this portion of L2 when it is unused by persisting accesses.
-### L2 Access Properties
 Three types of access properties are defined for different global memory data accesses:
     * `cudaAccessPropertyStreaming`: Memory accesses that occur with the streaming property are less likely to persist in the L2 cache because these accesses are preferentially evicted.
     * `cudaAccessPropertyPersisting`: Memory accesses that arise with the persisting property are more likely to stay in the L2 cache because these accesses are preferentially retained in the set-aside portion of L2 cache.
     * `cudaAccessPropertyNormal`: This access property forcibly resets previously applied persisting access property to a normal status.
-### Reset L2 Access to Normal
 A persisting L2cache may be persisting long after a CUDA kernel is executed. 
 It's a good practice to clear L2 persisting cache and its access properties.
-### CUDA Stream
-A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.  
+**CUDA Stream**: A stream is a sequence of operations that are executed on threads. Different streams can run on different threads concurrently.  
 ### Utilization of L2 set-aside cache.
 Multiple CUDA kernels executing concurrently on different streams have different access policy window, but L2 set-aside cache is shared among all the streams. 
 The net utilization of L2 set-aside cache is the sum of  L2 set aside used in all the concurrent kernels.
-### Query properties of L2 cache
 Properties related to L2 cache are a part of `cudaDeviceProp` struct and can be queried using CUDA runtime API `cudaGetDeviceProperties`
 ## Shared Memory
 Shared memory  is allocated using `__shared__` memory space specifier.
@@ -159,30 +155,26 @@ Time taken for matrix multiplication with shared memory : 9 microseconds
 ```
 As we can see, using shared memory reduces the computation time by approxmatively half.
 In this shared memory implementation, each thread block is responsible for computing one square sub-matrix Csub of C and each thread within the block is responsible for computing one element of Csub. 
-## Page-Locked memory
+## Page-Locked and Mapped memory
+### Page-Locked memory
 CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by `malloc()`)  
 Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
-### Write-Combining Memory
 By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag `cudaHostAllocWriteCombined` to `cudaHostAlloc()`.
 Write-combining memory frees up the host's L1 and L2 cache resources, making more cache available to the rest of the application. 
-## Mapped Memory
+### Mapped Memory
 A block of page-locked host memory can also be mapped into the address space of the device by passing flag `cudaHostAllocMapped` to `cudaHostAlloc()` or by passing flag cudaHostRegisterMapped to cudaHostRegister(). 
 Such a block has therefore in general two addresses: one in host memory that is returned by `cudaHostAlloc()` or `malloc()`, and one in device memory that can be retrieved using `cudaHostGetDevicePointer()` and then used to access the block from within a kernel.
 ## Asynchronous Concurrent Execution
-### Concurrent Execution between Host and Device
-Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
+**Concurrent Execution between Host and Device**: Concurrent Execution between Host and Device is provided by library functions that return the control to CPU before a function on the device is executed.
 Many device operations(streams) can be queued up using asynchronous calls if appropriate resources are available.
 This relieves the host thread of much of the responsibility to manage the device, leaving it free for other tasks.
-### Concurrent Kernel Execution
-Machines with high compute capabilities (>2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
-### Overlap of Data Transfer and Kernel Execution
+**Concurrent Kernel Execution**: Machines with high compute capabilities (>2.0) can execute kernels concurrently. Kernels that require a huge amount of memory are less likely to be run concurrently.
 Some devices can perform asynchronous memory transfer to and from GPU with kernels running concurrently.
 asyncEngineCount property is used to check whether a device supports this functionality or not.
 Some devices also support concurrent and overlapping data transfers.
 ## Streams
 Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels.
 If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0.
-### Creation and Destruction of Stream
 The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device  and one memory copy from device to host:
 ```
 cudaStream_t stream[2];
@@ -200,7 +192,6 @@ for (int i = 0; i < 2; ++i)
     cudaStreamDestroy(stream[i]);
 ```
 
-### Explicit Synchronization
 `cudaDeviceSynchronize()` waits until all preceding commands in all streams of all host threads have completed.
 `cudaStreamSynchronize()`takes a stream as a parameter and waits until all preceding commands in the given stream have completed.
 ### Host Functions (Callbacks)
@@ -250,7 +241,7 @@ for (device = 0; device < deviceCount; ++device) {
 ```
 This code lets you print properties of device on the system.
 
-## Peer-to-Peer Memory Access
+### Peer-to-Peer Memory Access
 In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
 This peer-to-peer memory access feature is supported between two devices if `cudaDeviceCanAccessPeer()` returns true for these two devices. 
 A unified address space is used for both devices, so the same pointer can be used to address memory from both devices as shown in the code sample below
@@ -274,7 +265,6 @@ This is done using `cudaMemcpyPeer()`, `cudaMemcpyPeerAsync()`, `cudaMemcpy3DPee
 ## Unified Virtual Address Space
 A single unified address space is used for both device and host. Memory allocation in host takes place through CUDA API calls.
 `cudaPointerGetAttributes()` is used to determine the location of the memory on the host and devices allocated through CUDA. 
-## Error Checking 
 The runtime maintains an error variable, called `cudaPeekAtLastError()`, for each host thread that is initialized to cudaSuccess and is overwritten by the error code every time an error occurs.
 ## Texture and Surface Memory 
 CUDA supports a subset of the texturing hardware that the GPU uses for graphics to access texture and surface memory.
@@ -289,14 +279,54 @@ Texture Reference and Objects have the following attributes (see example texture
     * Read mode: which is equal to cudaReadModeNormalizedFloat or       cudaReadModeElementType
     * Addressing mode
     * Filtering mode: Specifies how the value returned when fetching the texture is computed based on the input texture coordinates
-For code sample on how to initiate texture see `src/txture.cu` 
-### Layered Textures
+### Quick Hands On
+```
+// texture object is a kernel argument
+__global__ void kernel(cudaTextureObject_t tex) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  float x = tex1Dfetch<float>(tex, i);
+  //  Do something with x
+}
+
+
+int main() {
+  // declare and allocate memory
+  float *buffer;
+  cudaMalloc(&buffer, N*sizeof(float));
+
+  // create texture object
+  cudaResourceDesc resDesc;
+  memset(&resDesc, 0, sizeof(resDesc));
+  resDesc.resType = cudaResourceTypeLinear;
+  resDesc.res.linear.devPtr = buffer;
+  resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
+  
+  resDesc.res.linear.sizeInBytes = N*sizeof(float);
+
+  const cudaTextureDesc texDesc;
+  memset(&texDesc, 0, sizeof(texDesc));
+  texDesc.readMode = cudaReadModeElementType;
+
+  // create texture object: we only have to do this once!
+  cudaTextureObject_t tex;
+  cudaCreateTextureObject(&tex, &resDesc, &texDesc, NULL);
+
+  kernel <<<512, 512>>>(tex); // pass texture as argument
+
+  // destroy texture object
+  cudaDestroyTextureObject(tex);
+
+  cudaFree(buffer);
+}
+```
+This code iniates a texture a memory and runs a kernel on it. 
+See full code at `src/txture.cu`.
+
 A one-dimensional or two-dimensional layered texture is a texture made up of a sequence of layers, all of which are regular textures of same dimensionality, size, and data type.
-### Cubemap Textures
-A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
+**Cubemap Textures**: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
 A layered texture can only be a CUDA array by calling `cudaMalloc3DArray()` with the `cudaArrayCubemap` flag. 
 A cubemap layered texture is a layered texture whose layers are cubemaps of the same dimension.
-## Surface Memory
+### Surface Memory
 CUDA arrays can be written/read from surface memory. 
 Similar to texture, there are two ways to access surface memory: surface object or surface reference.
 `cudaCreateSurfaceObject()`  is used to create a surface object.
@@ -304,14 +334,13 @@ A surface reference is declared at file scope as a variable of type surface:
 ```
 surface<void, Type> surfRef;
 ```
-### Cubemap surface
 Similar to cubemap texture, cubemap surface is two-layered surface memory
 ## Versioning and Compatibility
 There are two types of versions important to the developer community: compute capability and the version of the CUDA driver API that describes the features supported by the driver API and runtime.
 Version of CUDA API can be accessed via `CUDA_VERSION`.
 The Driver API Is Backward but Not Forward Compatible :
 
-![cpu vs gpu architecture](images/versioning.PNG)
+![versioning](images/versioning.PNG)
 ## Compute Modes 
 Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
     - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device
