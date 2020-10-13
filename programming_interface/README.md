@@ -1,4 +1,5 @@
-# NVCC Compilation
+# Programming Interface
+## NVCC Compilation
 
 Kernels can be either written using a higher-level language like C++ or using CUDA instruction set architecture, called PTX.
 In both cases, `nvcc` is used to convert Kernels into binary code.
@@ -34,7 +35,7 @@ generates binary code compatible with compute capability 5.0 and 6.0.
 Host code has full C++ support, while only a subset of C++ is supported for device code.
 The 64-bit version of nvcc can compile device code in 32-bit mode using  `-m32` compiler option.
 
-# CUDA runtime
+## CUDA runtime
 
 Runtime initializes whenever the first runtime function is called.
 The runtime creates a CUDA context(runtime environment) for each device in the system, and this context is shared among all host threads.
@@ -336,7 +337,7 @@ There are two types of versions important to the developer community: compute ca
 Version of CUDA API can be accessed via `CUDA_VERSION`.
 The Driver API Is Backward but Not Forward Compatible :
 
-![cpu vs gpu architecture](images/versioning.PNG)
+![versioning](images/versioning.PNG)
 ## Compute Modes 
 Compute modes on CUDA can be accessed via NVIDIA-SMI( System Management Interface). The three different computing modes on CUDA are:
     - Default compute mode: Multiple host threads can use the device (by calling `cudaSetDevice()` on this device

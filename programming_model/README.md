@@ -1,4 +1,4 @@
-## Programming Model
+# Programming Model
 
 ### Kernels
 
