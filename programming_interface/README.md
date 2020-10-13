@@ -1,19 +1,21 @@
 # Programming Interface
-## NVCC Compilation
+## Compilation
+
+### NVCC Compilation
 
 Kernels can be either written using a higher-level language like C++ or using CUDA instruction set architecture, called PTX.
 In both cases, `nvcc` is used to convert Kernels into binary code.
-## Offline Compilation
+### Offline Compilation
 
 `nvcc` separates the host code from the device code.
 The separated device code is compiled into PTX and/or binary code.
 `nvcc` also removes CUDA built-in syntax and variables like `<<<...>>>` from the host code.
 The modified host code is output either as C++ code that is left to be compiled using another tool or as object code directly by letting `nvcc` invoke the host compiler during the last compilation stage.
-## Just-in-Time Compilation
+### Just-in-Time Compilation
 
 PTX code loaded by an application at runtime can be compiled further to binary code by the device driver. This is called just-in-time compilation. Just-in-time compilation increases application load time but allows the application to benefit from any new compiler improvements coming with each new device driver.
 NVRTC compiler can be used to compile CUDA C++ device code to PTX at runtime.
-##  Binary, PTX and Application Compatibility
+##  Compatibility
 
 Compute capability is a version number, also called "SM version", that tells the features supported by a GPU. It is used by applications at runtime to determine which features are available on the device.
 
@@ -40,7 +42,7 @@ The 64-bit version of nvcc can compile device code in 32-bit mode using  `-m32` 
 Runtime initializes whenever the first runtime function is called.
 The runtime creates a CUDA context(runtime environment) for each device in the system, and this context is shared among all host threads.
 When a host thread calls `cudaDeviceReset()`, this destroys the primary context of the device the host thread currently operates on.
-## Device Memory
+### Device Memory
 The runtime provides built-in functions to allocate, deallocate and copy device memory. It also provides functions to transfer data between the device and host memory.
 The device memory can be allocated as linear memory or as CUDA arrays.
 Linear memory uses a single unified address space, which allows separately allocated entities to address each other via pointers.
@@ -153,12 +155,13 @@ Time taken for matrix multiplication with shared memory : 9 microseconds
 ```
 As we can see, using shared memory reduces the computation time by approxmatively half.
 In this shared memory implementation, each thread block is responsible for computing one square sub-matrix Csub of C and each thread within the block is responsible for computing one element of Csub. 
-## Page-Locked memory
+## Page-Locked and Mapped memory
+### Page-Locked memory
 CUDA runtime provides functions to allocate CPU memory without the help of CPU.  This type memory is known as page locked memory( as opposed to regular pageable host memory allocated by `malloc()`)  
 Page-locked host memory is a scarce resource; however, so allocations in page-locked memory will start failing long before allocations in pageable memory. Also, by reducing the amount of physical memory available to the operating system for paging, consuming too much page-locked memory reduces overall system performance.
 By default page-locked host memory is allocated as cacheable. It can  be allocated as write-combining instead by passing flag `cudaHostAllocWriteCombined` to `cudaHostAlloc()`.
 Write-combining memory frees up the host's L1 and L2 cache resources, making more cache available to the rest of the application. 
-## Mapped Memory
+### Mapped Memory
 A block of page-locked host memory can also be mapped into the address space of the device by passing flag `cudaHostAllocMapped` to `cudaHostAlloc()` or by passing flag cudaHostRegisterMapped to cudaHostRegister(). 
 Such a block has therefore in general two addresses: one in host memory that is returned by `cudaHostAlloc()` or `malloc()`, and one in device memory that can be retrieved using `cudaHostGetDevicePointer()` and then used to access the block from within a kernel.
 ## Asynchronous Concurrent Execution
@@ -238,7 +241,7 @@ for (device = 0; device < deviceCount; ++device) {
 ```
 This code lets you print properties of device on the system.
 
-## Peer-to-Peer Memory Access
+### Peer-to-Peer Memory Access
 In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
 This peer-to-peer memory access feature is supported between two devices if `cudaDeviceCanAccessPeer()` returns true for these two devices. 
 A unified address space is used for both devices, so the same pointer can be used to address memory from both devices as shown in the code sample below
@@ -323,7 +326,7 @@ A one-dimensional or two-dimensional layered texture is a texture made up of a s
 **Cubemap Textures**: A cubemap texture is type of two-dimensional layered texture that has six layers representing the faces of a cube.
 A layered texture can only be a CUDA array by calling `cudaMalloc3DArray()` with the `cudaArrayCubemap` flag. 
 A cubemap layered texture is a layered texture whose layers are cubemaps of the same dimension.
-## Surface Memory
+### Surface Memory
 CUDA arrays can be written/read from surface memory. 
 Similar to texture, there are two ways to access surface memory: surface object or surface reference.
 `cudaCreateSurfaceObject()`  is used to create a surface object.
