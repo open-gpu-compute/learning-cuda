@@ -13,12 +13,10 @@ fi
 branch=$(git symbolic-ref --short HEAD)
 
 # cd into docs, make them
-cd doc
 make clean html EXAMPLES_PATTERN=ex_*
-cd ..
 
 # move the docs to the top-level directory, stash for checkout
-mv doc/_build/html ./
+mv _build/html ./
 
 # html/ will stay there actually...
 git stash
