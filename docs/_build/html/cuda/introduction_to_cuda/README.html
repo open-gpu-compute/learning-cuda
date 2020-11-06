@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; Tutorials 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Programming Model" href="../programming_model/README.html" />
+    <link rel="prev" title="OPENGC’s Tutorials" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Tutorials
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CUDA Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#comparasion-between-gpu-and-cpu">Comparasion between GPU and CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cuda-a-scalable-programming-model">CUDA, a scalable programming model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_model/README.html">Programming Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_interface/README.html">Programming Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware_and_performance_guidlines/README.html">Hardware Implementations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware_and_performance_guidlines/README.html#performance-guidlines">Performance Guidlines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html">What is ROCm / HCC?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#installing-hip-hcc">Installing HIP/HCC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#quick-hands-on">Quick Hands-On</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html">Programming Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html#events">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html#multi-device-system">Multi-Device System</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tutorials</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/cuda/introduction_to_cuda/README.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="comparasion-between-gpu-and-cpu">
+<h2>Comparasion between GPU and CPU<a class="headerlink" href="#comparasion-between-gpu-and-cpu" title="Permalink to this headline">¶</a></h2>
+<p>The Graphics Processing Unit (GPU) provides higher memory bandwidth and instructions throughput as compared to the CPU within the same power usage. They have more transistors dedicated to data processing (e.g. float point computation), while CPUs have more transistors decided to cache and control flow.</p>
+<p>GPUs are specifically designed for parallel computing. Recent GPUs can execute thousands of threads (a sequence of operations) parallelly, but they have lower single-thread performance than CPUs.</p>
+<p>Archituture of CPU and GPU is shown below:</p>
+<p><img alt="cpu vs gpu architecture" src="../../_images/GPU_CPU_architecture.PNG" /></p>
+</div>
+<div class="section" id="cuda-a-scalable-programming-model">
+<h2>CUDA, a scalable programming model<a class="headerlink" href="#cuda-a-scalable-programming-model" title="Permalink to this headline">¶</a></h2>
+<p>CUDA (Compute Unified Device Architecture) is a platform and programming model for NVIDIA GPUs. It exposes GPU to general-purpose computing, thus parallelism of GPUs can be exploited. CUDA provides C++ as a higher-level language for programming and managing GPUs. It is designed to support various languages and application programming interfaces.</p>
+<p>CUDA transparently scales GPU’s parallelism using only three core abstractions, making the learning curve easier:</p>
+<ul class="simple">
+<li><p>a hierarchy of thread groups</p></li>
+<li><p>shared memories</p></li>
+<li><p>barrier synchronization.</p></li>
+</ul>
+<p>These abstractions provide both task parallelization (running different tasks on the same data) and data parallelization (running a single task on different components of data).</p>
+<p>CUDA can schedule each block of threads on any multiprocessor within the GPU in any order, concurrently or sequentially. Once compiled, a CUDA program can run on any number of multiprocessors.</p>
+<p>Automatic Scalability of CUDA in different GPUs:</p>
+<p><img alt="Automatic Scalability" src="../../_images/automatic-scalability.png" /></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../programming_model/README.html" class="btn btn-neutral float-right" title="Programming Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../index.html" class="btn btn-neutral float-left" title="OPENGC’s Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Yash Jain
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Programming Model &mdash; Tutorials 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Programming Interface" href="../programming_interface/README.html" />
+    <link rel="prev" title="Introduction" href="../introduction_to_cuda/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Tutorials
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CUDA Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction_to_cuda/README.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kernels">Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#thread-heirearchy">Thread Heirearchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#memory-heirearchy">Memory Heirearchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#heterogeneous-programming">Heterogeneous Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-cuda-c-code">Compiling CUDA C++ code:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-hands-on">Quick Hands On</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpu">CPU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gpu">GPU</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../programming_interface/README.html">Programming Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware_and_performance_guidlines/README.html">Hardware Implementations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware_and_performance_guidlines/README.html#performance-guidlines">Performance Guidlines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html">What is ROCm / HCC?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#installing-hip-hcc">Installing HIP/HCC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/introduction.html#quick-hands-on">Quick Hands-On</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html">Programming Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html#events">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hip/programming_guide.html#multi-device-system">Multi-Device System</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tutorials</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Programming Model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/cuda/programming_model/README.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="programming-model">
+<h1>Programming Model<a class="headerlink" href="#programming-model" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="kernels">
+<h2>Kernels<a class="headerlink" href="#kernels" title="Permalink to this headline">¶</a></h2>
+<p>In CUDA terminology,CPU and GPU are known as host and device respectively. The functions executed on the GPU are known as kernels. Kernels can be executed N times in parallel by N different CUDA threads.A kernel is defined using <code class="docutils literal notranslate"><span class="pre">__global__</span></code> declaration specifier. The number of CUDA threads that execute the kernel are defined by <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;....&gt;&gt;&gt;</span></code> operator.</p>
+<p>Each thread that executes a kernel is given a <code class="docutils literal notranslate"><span class="pre">threadIdx</span></code> that can be accessed using built-in variables.</p>
+</div>
+<div class="section" id="thread-heirearchy">
+<h2>Thread Heirearchy<a class="headerlink" href="#thread-heirearchy" title="Permalink to this headline">¶</a></h2>
+<p>CUDA organizes threads into groups called “thread blocks” and further organizes these “thread blocks” into a grid structure. Threads and threads blocks can be arranged in  1-dimension, 2-dimension or 3-dimension. This provides a natural way to perform computation on vector, matrix or volume.</p>
+<p>The syntax of kernel execution configuration is
+<code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;</span> <span class="pre">M</span> <span class="pre">,</span> <span class="pre">T</span> <span class="pre">&gt;&gt;&gt;</span></code>, which indicates that a kernel launches with a grid of M thread blocks. Each thread block has T parallel threads. Both M and T can be int or dim3(built-in structure to pass three dimensions).</p>
+<p><code class="docutils literal notranslate"><span class="pre">__syncthreads()</span></code>  lets you synchronize thread execution to coordinate memory access. <code class="docutils literal notranslate"><span class="pre">__syncthreads()</span></code> acts as a wall where all threads must wait until every thread reaches that point.</p>
+<p><img alt="grid of thread blocks" src="../../_images/grid-of-thread-blocks.png" /></p>
+</div>
+<div class="section" id="memory-heirearchy">
+<h2>Memory Heirearchy<a class="headerlink" href="#memory-heirearchy" title="Permalink to this headline">¶</a></h2>
+<p>Each thread has a private local memory. Each block has a private memory which is shared between all the threads in the block. Every thread has access to the global memory of the GPU.</p>
+<p>There also exists constant and texture memory which are read-only memory that can be accessed by all the threads. The global, constant and texture are same across kernel launches by an application.</p>
+</div>
+<div class="section" id="heterogeneous-programming">
+<h2>Heterogeneous Programming<a class="headerlink" href="#heterogeneous-programming" title="Permalink to this headline">¶</a></h2>
+<p>Kernels are executed on the device (GPU), and the rest of the C++ program runs on the host (CPU). Device and host have separate memory spaces in the DRAM, known as device memory and host memory respectively. The C++ program manages global, constant and texture memory visible to threads.</p>
+<p>Unified Memory in CUDA bridges the gap between host and device memory. Memory can be accessed from all GPUs and CPUs using a common address space.</p>
+<p><img alt="heterogeneous-programming" src="../../_images/heterogeneous-programming.png" /></p>
+</div>
+<div class="section" id="compiling-cuda-c-code">
+<h2>Compiling CUDA C++ code:<a class="headerlink" href="#compiling-cuda-c-code" title="Permalink to this headline">¶</a></h2>
+<p>NVCC is a compiler used for compiling CUDA C++ code. NVCC comes as sub-package with CUDA toolkit. More on NVCC in Section 3.</p>
+<p>CUDA toolkit can be installed using this <a class="reference external" href="https://docs.nvidia.com/cuda/#installation-guides">link</a>. Check if NVCC is installed properly using <code class="docutils literal notranslate"><span class="pre">nvcc</span> <span class="pre">--version</span></code>. You might have to add CUDA path to your <code class="docutils literal notranslate"><span class="pre">bashrc</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/usr/local/cuda-&lt;cuda_version&gt;/bin:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/cuda-&lt;cuda-version&gt;/lib64:<span class="nv">$LD_LIBRARY_PATH</span>
+</pre></div>
+</div>
+<p>Compile the program and make an executable file using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvcc</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">.</span><span class="n">cu</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">o</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Run the executable file using <code class="docutils literal notranslate"><span class="pre">./&lt;filename&gt;</span></code></p>
+</div>
+<div class="section" id="quick-hands-on">
+<h2>Quick Hands On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cpu">
+<h3>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h3>
+<p>Let’s write a simple program to add two vectors. In standard CPU based code, you would write this as</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Complete code is in <code class="docutils literal notranslate"><span class="pre">src/vector_add.cpp</span></code>. Compile and run it as</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ g++ src/vector_add.cpp -o vector_add_cpu
+$ ./vector_add_cpu
+Enter number of elements in your vector:
+<span class="m">1000000</span>
+<span class="o">[</span>Vector addition of <span class="m">1000000</span> elements using only CPU<span class="o">]</span>
+Time taken by <span class="k">function</span>: <span class="m">9898</span> microseconds
+Done
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu">
+<h3>GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">¶</a></h3>
+<p>On CUDA, you would write this as a kernel:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="kt">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">__global__</span></code> decorator indicates that this is a kernel.</p>
+<p>Here threads are enumerated using <code class="docutils literal notranslate"><span class="pre">i</span></code> and are executed concurrently.</p>
+<p>Complete code is in <code class="docutils literal notranslate"><span class="pre">src/vector_add.cu</span></code>. Read it for memory allocation and device copy semantics. Compile and run it as</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ nvcc src/vector_add.cu -o vector_add_gpu -std<span class="o">=</span>c++11
+$ ./vector_add_gpu
+Enter number of elements in your vector:
+<span class="m">1000000</span>
+<span class="o">[</span>Vector addition of <span class="m">1000000</span> elements<span class="o">]</span>
+<span class="o">[</span>Copy input data from the host memory to the CUDA device<span class="o">]</span>
+<span class="o">[</span>CUDA kernel launch with <span class="m">1954</span> blocks of <span class="m">512</span> threads<span class="o">]</span>
+Time taken by <span class="k">function</span> : <span class="m">62</span> microseconds
+<span class="o">[</span>Copy output data from the CUDA device to the host memory<span class="o">]</span>
+Done
+</pre></div>
+</div>
+<p>See how massive parallelization helped speed up the computation by a factor of 150.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../programming_interface/README.html" class="btn btn-neutral float-right" title="Programming Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../introduction_to_cuda/README.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Yash Jain
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
