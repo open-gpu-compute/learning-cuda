@@ -1,2 +1,2 @@
-# learning-cuda
-Basics of CUDA with emphasis on brevity and carity
+# Tutorials
+Basics of CUDA and HIP with emphasis on brevity and carity
