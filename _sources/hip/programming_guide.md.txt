@@ -1,6 +1,8 @@
 ## Programming Guide
-```
+### Coding Tutorial
+Following tutorial goes through rotates a string by 1 ASCII character. You can find the full code at `src/string.cpp`
 
+```cpp
 __global__ void helloworld(char* in, char* out)
 {
 	int num = hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
@@ -16,55 +18,51 @@ int main(int argc, char* argv[])
     cout << " System major " << devProp.major << endl;
     cout << " agent prop name " << devProp.name << endl;
 
-	/* Initial input,output for the host and create memory objects for the kernel*/
-	const char* input = "GdkknVnqkc";
-	size_t strlength = strlen(input);
-	cout << "input string:" << endl;
-	cout << input << endl;
-	char *output = (char*) malloc(strlength + 1);
+    //Initial input,output for the host and create memory objects for the kernel
+    const char* input = "GdkknVnqkc";
+    size_t strlength = strlen(input);
+    cout << "input string:" << endl;
+    cout << input << endl;
+    char *output = (char*) malloc(strlength + 1);
 
-	char* inputBuffer;
-	char* outputBuffer;
-	hipMalloc((void**)&inputBuffer, (strlength + 1) * sizeof(char));
+    char* inputBuffer;
+    char* outputBuffer;
+    hipMalloc((void**)&inputBuffer, (strlength + 1) * sizeof(char));
     hipMalloc((void**)&outputBuffer, (strlength + 1) * sizeof(char));
 
     hipMemcpy(inputBuffer, input, (strlength + 1) * sizeof(char), hipMemcpyHostToDevice);
 
-	hipLaunchKernelGGL(helloworld,
-                  dim3(1),
-                  dim3(strlength),
-                  0, 0,
-                  inputBuffer ,outputBuffer );
+    hipLaunchKernelGGL(helloworld,dim3(1),dim3(strlength),
+                  0, 0,inputBuffer ,outputBuffer );
 
-	hipMemcpy(output, outputBuffer,(strlength + 1) * sizeof(char), hipMemcpyDeviceToHost);
+    hipMemcpy(output, outputBuffer,(strlength + 1) * sizeof(char), hipMemcpyDeviceToHost);
 
     hipFree(inputBuffer);
     hipFree(outputBuffer);
 
-	output[strlength] = '\0';	//Add the terminal character to the end of output.
-	cout << "\noutput string:" << endl;
-	cout << output << endl;
+    output[strlength] = '\0';	//Add the terminal character to the end of output.
+    cout << "\noutput string:" << endl;
+    cout << output << endl;
 
-	free(output);
+    free(output);
 
-	std::cout<<"Passed!\n";
-	return SUCCESS;
+    std::cout<<"Passed!\n";
+    return SUCCESS;
 }
 ```
-Following tutorial goes through rotates a string by 1 ASCII character. You can find the full code at `src/string.cpp`
+We will now go through the code line by line,
 
-
-```
+```cpp
 #include <hip/hip_runtime.h>
 ```
 Include headers for HIP runtime libraries
 
 
-```
+```cpp
 __global__ void helloworld(char* in, char* out)
 {
-		int num = hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
-		out[num] = in[num] + 1;
+	int num = hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
+	out[num] = in[num] + 1;
 }
 ```
 
@@ -76,21 +74,21 @@ Apart from `__global__` functions, there are two more types of functions in HIP:
 * `__host__`: Supported `__host__` functions are executed on the host and called from the host
 `__host__` can combine with `__device__`, in which case the function compiles for both the host and device. These functions cannot use the HIP grid coordinate function.
 	 
-```
+```cpp
 hipDeviceProp_t devProp;
 ```
 `hipDeviceProp_t` is a struct use to store device properties similar to CUdevprop
-```
+```cpp
 hipGetDeviceProperties(&devProp, 0);
 ```
 `hipGetDeviceProperties` returns properties for a selected device.
-```
+```cpp
 hipMalloc((void**)&inputBuffer, (strlength + 1) * sizeof(char));
 hipMalloc((void**)&outputBuffer, (strlength + 1) * sizeof(char));
 hipMemcpy(inputBuffer, input, (strlength + 1) * sizeof(char), hipMemcpyHostToDevice);
 ```
 The runtime provides built-in functions to allocate, deallocate and copy device memory. It also provides functions to transfer data between the device and host memory. The device memory can be allocated as linear memory . Linear memory uses a single unified address space, which allows separately allocated entities to address each other via pointers. Linear memory is allocated using `hipMalloc()` and freed using `hipFree()`, and data transfer between host memory and device memory is done using `hipMemcpy()`.
-```	 
+```cpp
 hipLaunchKernelGGL(helloworld,dim3(1),dim3(strlength),0, 0,inputBuffer ,outputBuffer );
 ```
 	 
@@ -106,10 +104,10 @@ The first five parameters to hipLaunchKernel are the following:
 ### Mapped Memory
 A block of page-locked host memory can also be mapped into the address space of the device by passing flag`hipHostAllocMapped` to `hipHostAlloc()` or by passing flag `hipHostRegisterMapped` to `hipHostRegister()`. Such a block has therefore in general two addresses: one in host memory that is returned by `hipHostMalloc()` or `malloc()`, and one in device memory that can be retrieved using `hipHostGetDevicePointer()` and then used to access the block from within a kernel.
 
-### Matrix Multiplication Using Shared Memory
+### Matrix Multiplication Using Shared Memory in HIP
 Below contains the code for matrix multiplication in HIP using shared memory. Full code can be found at `src/mat_mul.src`
 
-```
+```cpp
  __global__ void  MatMulKernelSharedMemory(Matrix A, Matrix B, Matrix C)
 {
     // Block row and column
@@ -166,7 +164,7 @@ Below contains the code for matrix multiplication in HIP using shared memory. Fu
 
 ### Stream
 Streams are a sequence of commands that execute in order. There can be multiple streams executed on different kernels. If kernel launches do not specify a stream, the commands are run on default stream, known as stream 0. The following code sample creates two streams.Each of these streams is defined by the following code sample as a sequence of one memory copy from host to device and one memory copy from device to host:
-```
+```cpp
 hipStream_t stream[2];
 for (int i = 0; i < 2; ++i)
     hipStreamCreate(&stream[i]);
@@ -183,17 +181,17 @@ for (int i = 0; i < 2; ++i)
 ```
 `cudaDeviceSynchronize()` waits until all preceding commands in all streams of all host threads have completed. cudaStreamSynchronize()takes a stream as a parameter and waits until all preceding commands in the given stream have completed.
 
-## Events 
+### Events 
 The HIP runtime provides a way to monitor the device's progress by letting the application asynchronously record events at any point in the program, and query when these events are completed.
-``` 
+``` cpp
 hipEvent_t start, stop; 
 hipEventCreate(&start); 
 hipEventCreate(&stop); 
 ```
-## Multi-Device System 
+### Multi-Device System 
 Similar to CUDA, HIP support multiple devices for a host. A certain device can be selected for a certain stream.
 A host thread can set the device it operates on at any time by calling `hipSetDevice()`. 
-```
+```cpp
 int deviceCount;
 hipGetDeviceCount(&deviceCount);
 int device;
@@ -211,7 +209,7 @@ This code lets you print properties of device on the system.
 In a system with multiple devices, devices can address each other's memory depending upon their compute capability.
 This peer-to-peer memory access feature is supported between two devices if `hipDeviceCanAccessPeer()` returns true for these two devices. 
 A unified address space is used for both devices, so the same pointer can be used to address memory from both devices as shown in the code sample below
-```
+```cpp
 hipSetDevice(0);                   // Set device 0 as current
 float* p0;
 size_t size = 1024 * sizeof(float);
@@ -220,3 +218,38 @@ hipSetDevice(1);                   // Set device 1 as current
 hipDeviceEnablePeerAccess(0, 0);   // Enable peer-to-peer access
                                     // with device 0
 ```
+### Porting  CUDA C++ code
+ROCm provides 2 tools to convert CUDA C++ code to HIP C++ code, namely `hipify-clang` and `hipify-perl`.
+
+#### `hipify-clang`
+`hipify-clang` is a clang-based tool for translation CUDA sources into HIP sources.
+It translates CUDA source into an abstract syntax tree, which is being traversed by transformation matchers.
+After applying all the matchers, the output HIP source is produced.
+
+1. It is a translator; thus, any even very complicated constructs will be parsed successfully, or an error will be reported.
+2. It supports clang options like [`-I`](https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang-i-dir), [`-D`](https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang-d-macro), [`--cuda-path`](https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang-cuda-path), etc.
+3. Seamless support of new CUDA versions as it is clang's responsibility.
+4. Ease in support.
+
+
+For example to translate the file at `../cuda/src/vector_add.cu`, type 
+```bash
+hipify-clang vector_add.cu --cuda-path=/usr/local/cuda-11.0 -- -std=c++17
+```
+`make test-hipify` command is used to check if that a particular CUDA code can be converted to HIP.
+#### `hipify-perl`
+`hipify-perl` is autogenerated perl-based script which heavily uses regular expressions.
+
+
+1. Ease in use.
+2. It doesn't check the input source CUDA code for correctness.
+3. It doesn't have dependencies on 3rd party tools, including CUDA.
+
+
+For example to translate the file at `../cuda/src/vector_add.cu`, use
+```shell
+hipify-perl vector_add.cu > vector_add.cu.hip
+```
+HIP C++ code can be compiled with either with NVidia GPU or with AMD. On the NVIDIA CUDA platform, HIP provides header file which translate from the HIP runtime APIs to CUDA runtime APIs. So HIP code will be compiled using similar command on both NVidia and AMD.
+
+

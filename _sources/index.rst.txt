@@ -7,16 +7,16 @@ OPENGC's Tutorials
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: CUDA Tutorial:
 
-   cuda/introduction_to_cuda/README.md
-   cuda/programming_model/README.md
-   cuda/programming_interface/README.md
-   cuda/hardware_and_performance_guidlines/README.md
+   cuda/introduction_to_cuda.md
+   cuda/programming_model.md
+   cuda/programming_interface.md
+   cuda/hardware_and_performance_guidlines.md
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: HIP Tutorial:
 
    hip/introduction.md
