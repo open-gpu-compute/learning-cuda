@@ -1,9 +1,10 @@
-### What is ROCm / HCC?
+# Introduction
+## What is ROCm / HCC?
 ROCm / HCC is AMD's Single-source C++ framework for GPGPU programming. In effect: HCC is a CLang based compiler, which compiles your code in two passes. It compiles an x86 version of your code AND a GPU version of your code.
 Because the same compiler processes both x86 and GPU code, it ensures that all data-structures are compatible. With AMD's HSA project of the past, even pointers remain consistent between the codesets, allowing the programmer to easily transition between CPU and GPU code.
 In effect, ROCm / HCC is AMD's full attempt at a CUDA-like C++ environment. While OpenCL requires you to repeat yourself with any shared data-structure (in C nonetheless), HCC allows you to share pointers, classes, and structures between the CPU and GPU code.
 
-### What is Heterogeneous-Computing Interface for Portability (HIP)?
+## What is Heterogeneous-Computing Interface for Portability (HIP)?
  It's a C++ dialect designed to ease conversion of Cuda applications to portable C++ code. It provides a C-style API and a C++ kernel language. The C++ interface can use templates and classes across the host/kernel boundary.
 The HIPify tool automates much of the conversion work by performing a source-to-source transformation from Cuda to HIP. HIP code can run on AMD hardware (through the HCC compiler) or Nvidia hardware (through the NVCC compiler) with no performance loss compared with the original Cuda code.
 Programmers familiar with other GPGPU languages will find HIP very easy to learn and use. AMD platforms implement this language using the HC dialect described above, providing similar low-level control over the machine.
@@ -12,9 +13,9 @@ Similar to CUDA, HIP transparently scales GPU's parallelism using only three cor
 * a hierarchy of thread groups
 * shared memories
 * barrier synchronization.
-### Installing HIP/HCC
+## Installing HIP/HCC
 https://github.com/ROCm-Developer-Tools/HIP/blob/master/INSTALL.md
-### Quick Hands-On 
+## Quick Hands-On 
 Below contains the code for vector addition using a CUDA kernel. 
 ```
 __global__ void vectorAdd(const float *A, const float *B, float *C, int numElements)
