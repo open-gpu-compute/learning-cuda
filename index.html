@@ -91,10 +91,7 @@
 </ul>
 <p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html">What is ROCm / HCC?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#installing-hip-hcc">Installing HIP/HCC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#quick-hands-on">Quick Hands-On</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hip/programming_guide.html">Programming Guide</a></li>
 </ul>
 
@@ -166,21 +163,73 @@
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">CUDA Tutorial:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cuda/introduction_to_cuda.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cuda/programming_model.html">Programming Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cuda/programming_interface.html">Programming Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html">Hardware Implementations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#performance-guidlines">Performance Guidlines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/introduction_to_cuda.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cuda/introduction_to_cuda.html#comparasion-between-gpu-and-cpu">Comparasion between GPU and CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/introduction_to_cuda.html#cuda-a-scalable-programming-model">CUDA, a scalable programming model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/programming_model.html">Programming Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#kernels">Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#thread-heirearchy">Thread Heirearchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#memory-heirearchy">Memory Heirearchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#heterogeneous-programming">Heterogeneous Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#compiling-cuda-c-code">Compiling CUDA C++ code:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_model.html#quick-hands-on">Quick Hands On</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/programming_interface.html">Programming Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#compilation">Compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#compatibility">Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#cuda-runtime">CUDA runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#l2-cache">L2 Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#shared-memory">Shared Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#page-locked-and-mapped-memory">Page-Locked and Mapped memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#asynchronous-concurrent-execution">Asynchronous Concurrent Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#streams">Streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#graphs">Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#multi-device-system">Multi-Device System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#unified-virtual-address-space">Unified Virtual Address Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#texture-and-surface-memory">Texture and Surface Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#versioning-and-compatibility">Versioning and Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#compute-modes">Compute Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/programming_interface.html#mode-switches">Mode Switches:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html">Hardware Implementations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#simt-architecture">SIMT Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#hardware-multithreading">Hardware Multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#performance-guidlines">Performance Guidlines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#overall-performance">Overall Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#maximize-utilization">Maximize utilization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda/hardware_and_performance_guidlines.html#maximize-memory-throughput">Maximize Memory Throughput</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html">What is ROCm / HCC?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#installing-hip-hcc">Installing HIP/HCC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html#quick-hands-on">Quick Hands-On</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hip/programming_guide.html">Programming Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hip/introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hip/introduction.html#what-is-rocm-hcc">What is ROCm / HCC?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/introduction.html#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/introduction.html#installing-hip-hcc">Installing HIP/HCC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/introduction.html#quick-hands-on">Quick Hands-On</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hip/programming_guide.html">Programming Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#coding-tutorial">Coding Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#mapped-memory">Mapped Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#matrix-multiplication-using-shared-memory-in-hip">Matrix Multiplication Using Shared Memory in HIP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#stream">Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#multi-device-system">Multi-Device System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#peer-to-peer-memory-access">Peer-to-Peer Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hip/programming_guide.html#porting-cuda-c-code">Porting  CUDA C++ code</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>

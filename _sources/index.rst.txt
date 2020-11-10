@@ -7,7 +7,7 @@ OPENGC's Tutorials
 =====================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: CUDA Tutorial:
 
    cuda/introduction_to_cuda.md
@@ -16,7 +16,7 @@ OPENGC's Tutorials
    cuda/hardware_and_performance_guidlines.md
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: HIP Tutorial:
 
    hip/introduction.md

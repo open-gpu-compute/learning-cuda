@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>What is ROCm / HCC? &mdash; Tutorials 0.0.1 documentation</title>
+  <title>Introduction &mdash; Tutorials 0.0.1 documentation</title>
   
 
   
@@ -92,10 +92,13 @@
 </ul>
 <p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">What is ROCm / HCC?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#installing-hip-hcc">Installing HIP/HCC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#quick-hands-on">Quick Hands-On</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-rocm-hcc">What is ROCm / HCC?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-heterogeneous-computing-interface-for-portability-hip">What is Heterogeneous-Computing Interface for Portability (HIP)?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-hip-hcc">Installing HIP/HCC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-hands-on">Quick Hands-On</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="programming_guide.html">Programming Guide</a></li>
 </ul>
 
@@ -143,7 +146,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>What is ROCm / HCC?</li>
+      <li>Introduction</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,14 +165,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="what-is-rocm-hcc">
-<h1>What is ROCm / HCC?<a class="headerlink" href="#what-is-rocm-hcc" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-rocm-hcc">
+<h2>What is ROCm / HCC?<a class="headerlink" href="#what-is-rocm-hcc" title="Permalink to this headline">¶</a></h2>
 <p>ROCm / HCC is AMD’s Single-source C++ framework for GPGPU programming. In effect: HCC is a CLang based compiler, which compiles your code in two passes. It compiles an x86 version of your code AND a GPU version of your code.
 Because the same compiler processes both x86 and GPU code, it ensures that all data-structures are compatible. With AMD’s HSA project of the past, even pointers remain consistent between the codesets, allowing the programmer to easily transition between CPU and GPU code.
 In effect, ROCm / HCC is AMD’s full attempt at a CUDA-like C++ environment. While OpenCL requires you to repeat yourself with any shared data-structure (in C nonetheless), HCC allows you to share pointers, classes, and structures between the CPU and GPU code.</p>
 </div>
 <div class="section" id="what-is-heterogeneous-computing-interface-for-portability-hip">
-<h1>What is Heterogeneous-Computing Interface for Portability (HIP)?<a class="headerlink" href="#what-is-heterogeneous-computing-interface-for-portability-hip" title="Permalink to this headline">¶</a></h1>
+<h2>What is Heterogeneous-Computing Interface for Portability (HIP)?<a class="headerlink" href="#what-is-heterogeneous-computing-interface-for-portability-hip" title="Permalink to this headline">¶</a></h2>
 <p>It’s a C++ dialect designed to ease conversion of Cuda applications to portable C++ code. It provides a C-style API and a C++ kernel language. The C++ interface can use templates and classes across the host/kernel boundary.
 The HIPify tool automates much of the conversion work by performing a source-to-source transformation from Cuda to HIP. HIP code can run on AMD hardware (through the HCC compiler) or Nvidia hardware (through the NVCC compiler) with no performance loss compared with the original Cuda code.
 Programmers familiar with other GPGPU languages will find HIP very easy to learn and use. AMD platforms implement this language using the HC dialect described above, providing similar low-level control over the machine.
@@ -181,11 +186,11 @@ Similar to CUDA, HIP transparently scales GPU’s parallelism using only three c
 </ul>
 </div>
 <div class="section" id="installing-hip-hcc">
-<h1>Installing HIP/HCC<a class="headerlink" href="#installing-hip-hcc" title="Permalink to this headline">¶</a></h1>
+<h2>Installing HIP/HCC<a class="headerlink" href="#installing-hip-hcc" title="Permalink to this headline">¶</a></h2>
 <p>https://github.com/ROCm-Developer-Tools/HIP/blob/master/INSTALL.md</p>
 </div>
 <div class="section" id="quick-hands-on">
-<h1>Quick Hands-On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h1>
+<h2>Quick Hands-On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h2>
 <p>Below contains the code for vector addition using a CUDA kernel.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="n">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="nb">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="nb">int</span> <span class="n">numElements</span><span class="p">)</span>
 <span class="p">{</span>
@@ -239,6 +244,7 @@ Done
 <p>If executed on GPUs with equal computation power, both CUDA and HIP take approximatively equal time to run the function.
 <code class="docutils literal notranslate"><span class="pre">__global__</span></code> functions are executed on GPU and often known as Kernels.
 Each thread that executes a kernel is given a <code class="docutils literal notranslate"><span class="pre">hipthreadIdx_x</span></code> that can be accessed using built-in variables.</p>
+</div>
 </div>
 
 
