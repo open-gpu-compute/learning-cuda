@@ -187,14 +187,15 @@ Similar to CUDA, HIP transparently scales GPU’s parallelism using only three c
 </div>
 <div class="section" id="installing-hip-hcc">
 <h2>Installing HIP/HCC<a class="headerlink" href="#installing-hip-hcc" title="Permalink to this headline">¶</a></h2>
-<p>https://github.com/ROCm-Developer-Tools/HIP/blob/master/INSTALL.md</p>
+<p>HIP can be installed from the following link:
+https://github.com/ROCm-Developer-Tools/HIP/blob/master/INSTALL.md</p>
 </div>
 <div class="section" id="quick-hands-on">
 <h2>Quick Hands-On<a class="headerlink" href="#quick-hands-on" title="Permalink to this headline">¶</a></h2>
 <p>Below contains the code for vector addition using a CUDA kernel.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="n">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="nb">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="nb">int</span> <span class="n">numElements</span><span class="p">)</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="kt">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockDim</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span><span class="p">)</span>
     <span class="p">{</span>
@@ -217,9 +218,9 @@ Done
 </pre></div>
 </div>
 <p>The same code in HIP will be written as :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="n">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="n">const</span> <span class="nb">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="nb">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="nb">int</span> <span class="n">numElements</span><span class="p">)</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="kt">void</span> <span class="n">vectorAdd</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">hipThreadIdx_x</span> <span class="o">+</span> <span class="n">hipBlockDim_x</span> <span class="o">*</span> <span class="n">hipBlockIdx_x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">hipThreadIdx_x</span> <span class="o">+</span> <span class="n">hipBlockDim_x</span> <span class="o">*</span> <span class="n">hipBlockIdx_x</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span><span class="p">)</span>
     <span class="p">{</span>

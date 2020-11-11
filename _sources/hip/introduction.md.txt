@@ -14,10 +14,11 @@ Similar to CUDA, HIP transparently scales GPU's parallelism using only three cor
 * shared memories
 * barrier synchronization.
 ## Installing HIP/HCC
+HIP can be installed from the following link:
 https://github.com/ROCm-Developer-Tools/HIP/blob/master/INSTALL.md
 ## Quick Hands-On 
 Below contains the code for vector addition using a CUDA kernel. 
-```
+```cpp
 __global__ void vectorAdd(const float *A, const float *B, float *C, int numElements)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -42,7 +43,7 @@ Time taken by function : 62 microseconds
 Done
 ```
 The same code in HIP will be written as :
-```
+```cpp
 __global__ void vectorAdd(const float *A, const float *B, float *C, int numElements)
 {
     int i = hipThreadIdx_x + hipBlockDim_x * hipBlockIdx_x;
