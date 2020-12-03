@@ -1,2 +1,2 @@
 # Tutorials
-Basics of CUDA and HIP with emphasis on brevity and carity
+Basics of CUDA and HIP with emphasis on brevity and clarity
