@@ -21,6 +21,8 @@ OPENGC's Tutorials
 
    hip/introduction.md
    hip/programming_guide.md
+   hip/installing_pytorch.md
+   hip/compare_rocm_on_nvidia_and_amd.md
 
 Indices and tables
 ==================

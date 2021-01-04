@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installing PyTorch on AMD with ROCm &mdash; Tutorials 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Porting CUDA C++ code" href="compare_rocm_on_nvidia_and_amd.html" />
+    <link rel="prev" title="Programming Guide" href="programming_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Tutorials
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CUDA Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/introduction_to_cuda.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/programming_model.html">Programming Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/programming_interface.html">Programming Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/hardware_and_performance_guidlines.html">Hardware Implementations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cuda/hardware_and_performance_guidlines.html#performance-guidlines">Performance Guidlines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">HIP Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide.html">Programming Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing PyTorch on AMD with ROCm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#option-1-install-using-published-pytorch-rocm-docker-image">Option 1: Install using published PyTorch ROCm docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#option-2-install-using-minimal-rocm-docker-file">Option 2: Install using minimal ROCm docker file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compare_rocm_on_nvidia_and_amd.html">Porting  CUDA C++ code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compare_rocm_on_nvidia_and_amd.html#running-hip-code-on-nvidia">Running HIP code on NVIDIA</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Tutorials</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Installing PyTorch on AMD with ROCm</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hip/installing_pytorch.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installing-pytorch-on-amd-with-rocm">
+<h1>Installing PyTorch on AMD with ROCm<a class="headerlink" href="#installing-pytorch-on-amd-with-rocm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="option-1-install-using-published-pytorch-rocm-docker-image">
+<h2>Option 1: Install using published PyTorch ROCm docker image<a class="headerlink" href="#option-1-install-using-published-pytorch-rocm-docker-image" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Obtain docker image:
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">rocm/pytorch:latest-base</span></code></p></li>
+<li><p>Clone PyTorch repository on the host:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pytorch</span><span class="o">/</span><span class="n">pytorch</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">pytorch</span>
+<span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Start a docker container using the downloaded image:
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-it</span> <span class="pre">-v</span> <span class="pre">$HOME:/data</span> <span class="pre">--privileged</span> <span class="pre">--rm</span> <span class="pre">--device=/dev/kfd</span> <span class="pre">--device=/dev/dri</span> <span class="pre">--group-add</span> <span class="pre">video</span> <span class="pre">rocm/pytorch:latest-base</span></code>
+Note: This will mount your host home directory on /data in the container.</p></li>
+<li><p>Change to previous PyTorch checkout from within the running docker:
+<code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">/data/pytorch</span></code></p></li>
+<li><p>Build PyTorch for ROCm:
+By default, PyTorch will build for <code class="docutils literal notranslate"><span class="pre">gfx803</span></code>, <code class="docutils literal notranslate"><span class="pre">gfx900</span></code>, and <code class="docutils literal notranslate"><span class="pre">gfx906</span></code> simultaneously (to see which AMD uarch you have, run <code class="docutils literal notranslate"><span class="pre">/opt/rocm/bin/rocm_agent_enumerator</span></code>, <code class="docutils literal notranslate"><span class="pre">gfx900</span></code> are Vega10-type GPUs (MI25, Vega56, Vega64, …) and work best). If you want to compile only for your uarch, <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">PYTORCH_ROCM_ARCH=gfx900</span></code> to gfx803, gfx900, or gfx906. Then build with
+<code class="docutils literal notranslate"><span class="pre">.jenkins/pytorch/build.sh</span></code>
+This will first hipify the PyTorch sources and then compile, needing 16 GB of RAM to be available to the docker image.</p></li>
+</ul>
+<p>Confirm working installation:
+<code class="docutils literal notranslate"><span class="pre">.jenkins/pytorch/test.sh</span></code>
+runs all CI unit tests and skips as appropriate on your system based on ROCm and, e.g., single or multi GPU configuration. No tests will fail if the compilation and installation is correct. Additionally, this step will install torchvision which most PyTorch script use to load models. E.g., running the PyTorch examples requires torchvision.
+Individual test sets can be run with
+<code class="docutils literal notranslate"><span class="pre">PYTORCH_TEST_WITH_ROCM=1</span> <span class="pre">python</span> <span class="pre">test/test_nn.py</span> <span class="pre">--verbose</span></code>
+Where <code class="docutils literal notranslate"><span class="pre">test_nn.py</span></code> can be replaced with any other test set.</p>
+<p>Commit the container to preserve the pytorch install (from the host):
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">commit</span> <span class="pre">&lt;container_id&gt;</span> <span class="pre">-m</span> <span class="pre">'pytorch</span> <span class="pre">installed'</span></code></p>
+</div>
+<div class="section" id="option-2-install-using-minimal-rocm-docker-file">
+<h2>Option 2: Install using minimal ROCm docker file<a class="headerlink" href="#option-2-install-using-minimal-rocm-docker-file" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Download pytorch dockerfile:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This dockerfile is meant to be personalized, and serves as a template and demonstration.</span>
+<span class="c1"># Modify it directly, but it is recommended to copy this dockerfile into a new build context (directory),</span>
+<span class="c1"># modify to taste and modify docker-compose.yml.template to build and run it.</span>
+
+<span class="c1"># It is recommended to control docker containers through &#39;docker-compose&#39; https://docs.docker.com/compose/</span>
+<span class="c1"># Docker compose depends on a .yml file to control container sets</span>
+<span class="c1"># rocm-setup.sh can generate a useful docker-compose .yml file</span>
+<span class="c1"># `docker-compose run --rm &lt;rocm-terminal&gt;`</span>
+
+<span class="c1"># If it is desired to run the container manually through the docker command-line, the following is an example</span>
+<span class="c1"># &#39;docker run -it --rm -v [host/directory]:[container/directory]:ro &lt;user-name&gt;/&lt;project-name&gt;&#39;.</span>
+
+<span class="n">FROM</span> <span class="n">ubuntu</span><span class="p">:</span><span class="mf">18.04</span>
+<span class="n">MAINTAINER</span> <span class="n">Michael</span> <span class="n">Wootton</span> <span class="o">&lt;</span><span class="n">michael</span><span class="o">.</span><span class="n">wootton</span><span class="nd">@amd</span><span class="o">&gt;</span>
+
+<span class="c1"># Initialize the image</span>
+<span class="c1"># Modify to pre-install dev tools and ROCm packages</span>
+<span class="n">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">gnupg2</span>
+<span class="n">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">DEBIAN_FRONTEND</span><span class="o">=</span><span class="n">noninteractive</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">recommends</span> <span class="n">curl</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">curl</span> <span class="o">-</span><span class="n">sL</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">radeon</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">debian</span><span class="o">/</span><span class="n">rocm</span><span class="o">.</span><span class="n">gpg</span><span class="o">.</span><span class="n">key</span> <span class="o">|</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="o">-</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s1">&#39;echo deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main &gt; /etc/apt/sources.list.d/rocm.list&#39;</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">DEBIAN_FRONTEND</span><span class="o">=</span><span class="n">noninteractive</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">recommends</span> \
+  <span class="n">sudo</span> \
+  <span class="n">libelf1</span> \
+  <span class="n">build</span><span class="o">-</span><span class="n">essential</span> \
+  <span class="n">bzip2</span> \
+  <span class="n">ca</span><span class="o">-</span><span class="n">certificates</span> \
+  <span class="n">cmake</span> \
+  <span class="n">ssh</span> \
+  <span class="n">apt</span><span class="o">-</span><span class="n">utils</span> \
+  <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> \
+  <span class="n">g</span><span class="o">++-</span><span class="n">multilib</span> \
+  <span class="n">gdb</span> \
+  <span class="n">git</span> \
+  <span class="n">less</span> \
+  <span class="n">libunwind</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libfftw3</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libelf</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libomp</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libpthread</span><span class="o">-</span><span class="n">stubs0</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">make</span> \
+  <span class="n">miopen</span><span class="o">-</span><span class="n">hip</span> \
+  <span class="n">python3</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">python3</span><span class="o">-</span><span class="n">future</span> \
+  <span class="n">python3</span><span class="o">-</span><span class="n">yaml</span> \
+  <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> \
+  <span class="n">vim</span> \
+  <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libboost</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libboost</span><span class="o">-</span><span class="n">filesystem</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">libopenblas</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">rpm</span> \
+  <span class="n">wget</span> \
+  <span class="n">net</span><span class="o">-</span><span class="n">tools</span> \
+  <span class="n">iputils</span><span class="o">-</span><span class="n">ping</span> \
+  <span class="n">libnuma</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">rocm</span><span class="o">-</span><span class="n">dev</span> \
+  <span class="n">rocrand</span> \
+  <span class="n">rocblas</span> \
+  <span class="n">rocfft</span> \
+  <span class="n">hipcub</span> \
+  <span class="n">rocthrust</span> \
+  <span class="n">hipsparse</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">curl</span> <span class="o">-</span><span class="n">sL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">apt</span><span class="o">.</span><span class="n">llvm</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">llvm</span><span class="o">-</span><span class="n">snapshot</span><span class="o">.</span><span class="n">gpg</span><span class="o">.</span><span class="n">key</span> <span class="o">|</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="o">-</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s1">&#39;echo deb [arch=amd64] http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main &gt; /etc/apt/sources.list.d/llvm7.list&#39;</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s1">&#39;echo deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main &gt;&gt; /etc/apt/sources.list.d/llvm7.list&#39;</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">DEBIAN_FRONTEND</span><span class="o">=</span><span class="n">noninteractive</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">recommends</span> \
+  <span class="n">clang</span><span class="o">-</span><span class="mi">7</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">clean</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">lists</span><span class="o">/*</span>
+
+<span class="c1"># fix capitalization in some cmake files...</span>
+<span class="n">RUN</span> <span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/find_dependency(hip)/find_dependency(HIP)/g&#39;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">rocsparse</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">cmake</span><span class="o">/</span><span class="n">rocsparse</span><span class="o">/</span><span class="n">rocsparse</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">cmake</span>
+<span class="n">RUN</span> <span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/find_dependency(hip)/find_dependency(HIP)/g&#39;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">rocfft</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">cmake</span><span class="o">/</span><span class="n">rocfft</span><span class="o">/</span><span class="n">rocfft</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">cmake</span>
+<span class="n">RUN</span> <span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/find_dependency(hip)/find_dependency(HIP)/g&#39;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">miopen</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">cmake</span><span class="o">/</span><span class="n">miopen</span><span class="o">/</span><span class="n">miopen</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">cmake</span>
+<span class="n">RUN</span> <span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/find_dependency(hip)/find_dependency(HIP)/g&#39;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">rocblas</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">cmake</span><span class="o">/</span><span class="n">rocblas</span><span class="o">/</span><span class="n">rocblas</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">cmake</span>
+
+<span class="c1"># Grant members of &#39;sudo&#39; group passwordless privileges</span>
+<span class="c1"># Comment out to require sudo</span>
+<span class="c1">#COPY sudo-nopasswd /etc/sudoers.d/sudo-nopasswd</span>
+
+<span class="c1"># This is meant to be used as an interactive developer container</span>
+<span class="c1"># Create user rocm-user as member of sudo group</span>
+<span class="c1"># Append /opt/rocm/bin to the system PATH variable</span>
+<span class="c1">#RUN useradd --create-home -G sudo --shell /bin/bash rocm-user</span>
+<span class="c1">#RUN usermod -a -G video rocm-user</span>
+<span class="c1">#    sed --in-place=.rocm-backup &#39;s|^\(PATH=.*\)&quot;$|\1:/opt/rocm/bin&quot;|&#39; /etc/environment</span>
+
+<span class="c1">#USER rocm-user</span>
+<span class="c1">#WORKDIR /home/rocm-user</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">root</span>
+<span class="n">ENV</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{PATH}</span><span class="s2">:/opt/rocm/bin&quot;</span> <span class="n">HIP_PLATFORM</span><span class="o">=</span><span class="s2">&quot;hcc&quot;</span>
+
+<span class="c1">#RUN \</span>
+<span class="c1">#  curl -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh &amp;&amp; \</span>
+<span class="c1">#  bash Anaconda3-5.0.1-Linux-x86_64.sh -b</span>
+<span class="c1">#  rm Anaconda3-5.0.1-Linux-x86_64.sh</span>
+
+<span class="c1"># The following are optional enhancements for the command-line experience</span>
+<span class="c1"># Uncomment the following to install a pre-configured vim environment based on http://vim.spf13.com/</span>
+<span class="c1"># 1.  Sets up an enhanced command line dev environment within VIM</span>
+<span class="c1"># 2.  Aliases GDB to enable TUI mode by default</span>
+<span class="c1">#RUN curl -sL https://j.mp/spf13-vim3 | bash &amp;&amp; \</span>
+<span class="c1">#    echo &quot;alias gdb=&#39;gdb --tui&#39;\n&quot; &gt;&gt; ~/.bashrc</span>
+
+<span class="c1">#RUN \</span>
+<span class="c1">#  bash installers/Anaconda3-5.2.0-Linux-x86_64.sh -b</span>
+
+<span class="c1">#ENV PATH=&quot;/home/rocm-user/anaconda3/bin:${PATH}&quot; KMTHINLTO=&quot;1&quot;</span>
+<span class="n">ENV</span> <span class="n">KMTHINLTO</span><span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="n">LANG</span><span class="o">=</span><span class="s2">&quot;C.UTF-8&quot;</span> <span class="n">LC_ALL</span><span class="o">=</span><span class="s2">&quot;C.UTF-8&quot;</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">setuptools</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">pyyaml</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">scipy</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">typing</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">enum34</span>
+
+<span class="n">RUN</span> \
+  <span class="n">pip3</span> <span class="n">install</span> <span class="n">hypothesis</span>
+
+<span class="n">RUN</span> \
+  <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gcc</span> <span class="n">gcc</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">clang</span><span class="o">-</span><span class="mi">7</span> <span class="mi">50</span> <span class="o">&amp;&amp;</span> \
+  <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">g</span><span class="o">++</span> <span class="n">g</span><span class="o">++</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">clang</span><span class="o">++-</span><span class="mi">7</span> <span class="mi">50</span>
+
+
+<span class="c1"># Default to a login shell</span>
+<span class="n">CMD</span> <span class="p">[</span><span class="s2">&quot;bash&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Build docker image:
+<code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">pytorch_docker</span></code>
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">build</span> <span class="pre">.</span></code>
+This should complete with a message “Successfully built &lt;image_id&gt;”</p></li>
+<li><p>Start a docker container using the new image:
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-it</span> <span class="pre">-v</span> <span class="pre">$HOME:/data</span> <span class="pre">--privileged</span> <span class="pre">--rm</span> <span class="pre">--device=/dev/kfd</span> <span class="pre">--device=/dev/dri</span> <span class="pre">--group-add</span> <span class="pre">video</span> <span class="pre">&lt;image_id&gt;</span></code>
+Note: This will mount your host home directory on <code class="docutils literal notranslate"><span class="pre">/data</span></code> in the container.</p></li>
+<li><p>Clone pytorch master (on to the host):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pytorch</span><span class="o">/</span><span class="n">pytorch</span><span class="o">.</span><span class="n">git</span> <span class="ow">or</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ROCmSoftwarePlatform</span><span class="o">/</span><span class="n">pytorch</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">pytorch</span>
+<span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run “hipify” to prepare source code (in the container):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">pytorch</span><span class="o">/</span>
+<span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">amd_build</span><span class="o">/</span><span class="n">build_amd</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Build and install pytorch:
+By default, PyTorch will build for gfx803, gfx900, and gfx906 simultaneously (to see which AMD uarch you have, run /opt/rocm/bin/rocm_agent_enumerator. If you want to compile only for your uarch, export PYTORCH_ROCM_ARCH=gfx900 to gfx803, gfx900, or gfx906. Then build with
+<code class="docutils literal notranslate"><span class="pre">USE_MKLDNN=0</span> <span class="pre">USE_ROCM=1</span> <span class="pre">MAX_JOBS=4</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--user</span></code>
+Use MAX_JOBS=n to limit peak memory usage. If building fails try falling back to fewer jobs. 4 jobs assume available main memory of 16 GB or larger.</p></li>
+<li><p>Confirm working installation:
+<code class="docutils literal notranslate"><span class="pre">.jenkins/pytorch/test.sh</span></code></p></li>
+</ul>
+<p>Individual test sets can be run with
+<code class="docutils literal notranslate"><span class="pre">PYTORCH_TEST_WITH_ROCM=1</span> <span class="pre">python</span> <span class="pre">test/test_nn.py</span> <span class="pre">--verbose</span></code>
+Where test_nn.py can be replaced with any other test set.</p>
+<ul class="simple">
+<li><p>Commit the container to preserve the pytorch install (from the host):
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">commit</span> <span class="pre">&lt;container_id&gt;</span> <span class="pre">-m</span> <span class="pre">'pytorch</span> <span class="pre">installed'</span></code></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="compare_rocm_on_nvidia_and_amd.html" class="btn btn-neutral float-right" title="Porting CUDA C++ code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="programming_guide.html" class="btn btn-neutral float-left" title="Programming Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Yash Jain
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
