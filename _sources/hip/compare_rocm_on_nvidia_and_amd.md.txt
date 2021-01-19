@@ -47,6 +47,7 @@ This will install all the ROCM packages along with `hipcc` and `hipify` on NVIDI
 ### Compiling HIP Code.
 HIP C++ code can be compiled with either with NVidia GPU or with AMD. Once ROCM software stack is installed on NVIDIA, HIP code can be compiled using similar command on both NVidia and AMD.
 
+<<<<<<< HEAD
 ## Benchmarks
 Following table comapares different GPU operations on NVIDIA GPU with CUDA, NVIDIA GPU with ROCM and AMD GPU with ROCM
 |                                                             | NVIDIA with CUDA | NVIDIA with ROCm  | AMD with ROCm     |
@@ -60,5 +61,7 @@ As we see shared memory plays a huge difference when it comes to matrix multipli
 
 Disclaimer : GPUs used in benchmarking are of different compute capabilities.
 
+=======
+>>>>>>> 6e14eee67140eb9233c8afb7aa4b484f7969de75
 
  
