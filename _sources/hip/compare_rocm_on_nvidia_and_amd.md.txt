@@ -49,12 +49,8 @@ HIP C++ code can be compiled with either with NVidia GPU or with AMD. Once ROCM 
 
 ## Benchmarks
 Following table comapares different GPU operations on NVIDIA GPU with CUDA, NVIDIA GPU with ROCM and AMD GPU with ROCM
-|                                                             | NVIDIA with CUDA | NVIDIA with ROCm  | AMD with ROCm     |
-|-------------------------------------------------------------|------------------|-------------------|-------------------|
-|                                                             |                  |                   |                   |
-| Vector Addition (n=100000)                                  | 984 microseconds | 1001 microseconds | 1011 microseconds |
-| Matrix Multiplication w/out shared memory           n=10000 | 458 microseconds | 598 microseconds  | 616 microseconds  |
-| Matrix Multiplication with shared memory          n=10000   | 7 microseconds   | 8 microseconds    | 8 microseconds    |
+
+![Benchmark](./images/benchmark.png)
 
 As we see shared memory plays a huge difference when it comes to matrix multipliccation. 
 
